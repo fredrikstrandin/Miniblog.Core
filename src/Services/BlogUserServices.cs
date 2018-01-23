@@ -2,10 +2,12 @@
 using System.Text;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Miniblog.Core.Services
 {
-    public class BlogUserServices: IUserServices
+
+    public class BlogUserServices : IUserServices
     {
         private readonly IConfiguration _config;
 
@@ -16,12 +18,14 @@ namespace Miniblog.Core.Services
 
         public bool ValidateUser(string username, string password)
         {
-            return username == _config["user:username"] && VerifyHashedPassword(password, _config);
+            var expectedUsername = _config["user_username"] ?? _config["user:username"]; 
+            return username == expectedUsername && VerifyHashedPassword(password, _config);
         }
 
         private bool VerifyHashedPassword(string password, IConfiguration config)
         {
-            byte[] saltBytes = Encoding.UTF8.GetBytes(config["user:salt"]);
+            var saltRaw = config["user_salt"] ?? config["user:salt"];
+            byte[] saltBytes = Encoding.UTF8.GetBytes(saltRaw);
 
             byte[] hashBytes = KeyDerivation.Pbkdf2(
                 password: password,
@@ -32,7 +36,8 @@ namespace Miniblog.Core.Services
             );
 
             string hashText = BitConverter.ToString(hashBytes).Replace("-", string.Empty);
-            return hashText == config["user:password"];
+            var expectedHashText = config["user_password"] ?? config["user:password"];
+            return hashText == expectedHashText;
         }
     }
 }
