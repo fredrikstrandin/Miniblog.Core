@@ -84,7 +84,14 @@ namespace Miniblog.Core.Repository.MongoDB
 
             //TODO: Check if update or Insert.
 
-            await _context.PostEntityCollection.InsertOneAsync(post);            
+            await _context.PostEntityCollection.InsertOneAsync(post);
+            foreach (var item in post.Categories)
+            {
+                if (await _context.CategorieEntityCollection.CountAsync(x => x.Name == item) == 0)
+                {
+                    await _context.CategorieEntityCollection.InsertOneAsync(new Model.CategorieEntity() { Name = item });
+                }
+            }
         }
 
         public async Task DeletePostAsync(Post post)
