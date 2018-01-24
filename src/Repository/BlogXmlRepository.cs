@@ -94,6 +94,89 @@ namespace Miniblog.Core.Repository
             });
         }
 
+        public async Task<IEnumerable<string>> GetCategoriesAsync(bool isAdmin)
+        {
+
+            return await Task.Run(() =>
+            {
+                var categories = _cache
+                    .Where(p => p.IsPublished || isAdmin)
+                    .SelectMany(post => post.Categories)
+                    .Select(cat => cat.ToLowerInvariant())
+                    .Distinct();
+
+                return categories;
+            });
+
+        }
+
+        public async Task SavePostAsync(Post post)
+        {
+            string filePath = GetFilePath(post);
+            post.LastModified = DateTime.UtcNow;
+
+            XDocument doc = new XDocument(
+                            new XElement("post",
+                                new XElement("title", post.Title),
+                                new XElement("slug", post.Slug),
+                                new XElement("pubDate", post.PubDate.ToString("yyyy-MM-dd HH:mm:ss")),
+                                new XElement("lastModified", post.LastModified.ToString("yyyy-MM-dd HH:mm:ss")),
+                                new XElement("excerpt", post.Excerpt),
+                                new XElement("content", post.Content),
+                                new XElement("ispublished", post.IsPublished),
+                                new XElement("categories", string.Empty),
+                                new XElement("comments", string.Empty)
+                            ));
+
+            XElement categories = doc.XPathSelectElement("post/categories");
+            foreach (string category in post.Categories)
+            {
+                categories.Add(new XElement("category", category));
+            }
+
+            XElement comments = doc.XPathSelectElement("post/comments");
+            foreach (Comment comment in post.Comments)
+            {
+                comments.Add(
+                    new XElement("comment",
+                        new XElement("author", comment.Author),
+                        new XElement("email", comment.Email),
+                        new XElement("date", comment.PubDate.ToString("yyyy-MM-dd HH:m:ss")),
+                        new XElement("content", comment.Content),
+                        new XAttribute("isAdmin", comment.IsAdmin),
+                        new XAttribute("id", comment.ID)
+                    ));
+            }
+
+            using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite))
+            {
+                await doc.SaveAsync(fs, SaveOptions.None, CancellationToken.None).ConfigureAwait(false);
+            }
+
+            if (!_cache.Contains(post))
+            {
+                _cache.Add(post);
+                SortCache();
+            }
+        }
+
+        public Task DeletePostAsync(Post post)
+        {
+            string filePath = GetFilePath(post);
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            if (_cache.Contains(post))
+            {
+                _cache.Remove(post);
+            }
+
+            return Task.CompletedTask;
+        }
+
         #region Private Method
         private void Initialize()
         {
@@ -193,91 +276,6 @@ namespace Miniblog.Core.Repository
 
             return defaultValue;
         }
-
-
-        public async Task<IEnumerable<string>> GetCategoriesAsync(bool isAdmin)
-        {
-
-            return await Task.Run(() =>
-            {
-                var categories = _cache
-                    .Where(p => p.IsPublished || isAdmin)
-                    .SelectMany(post => post.Categories)
-                    .Select(cat => cat.ToLowerInvariant())
-                    .Distinct();
-
-                return categories;
-            });
-
-        }
-
-        public async Task SavePostAsync(Post post)
-        {
-            string filePath = GetFilePath(post);
-            post.LastModified = DateTime.UtcNow;
-
-            XDocument doc = new XDocument(
-                            new XElement("post",
-                                new XElement("title", post.Title),
-                                new XElement("slug", post.Slug),
-                                new XElement("pubDate", post.PubDate.ToString("yyyy-MM-dd HH:mm:ss")),
-                                new XElement("lastModified", post.LastModified.ToString("yyyy-MM-dd HH:mm:ss")),
-                                new XElement("excerpt", post.Excerpt),
-                                new XElement("content", post.Content),
-                                new XElement("ispublished", post.IsPublished),
-                                new XElement("categories", string.Empty),
-                                new XElement("comments", string.Empty)
-                            ));
-
-            XElement categories = doc.XPathSelectElement("post/categories");
-            foreach (string category in post.Categories)
-            {
-                categories.Add(new XElement("category", category));
-            }
-
-            XElement comments = doc.XPathSelectElement("post/comments");
-            foreach (Comment comment in post.Comments)
-            {
-                comments.Add(
-                    new XElement("comment",
-                        new XElement("author", comment.Author),
-                        new XElement("email", comment.Email),
-                        new XElement("date", comment.PubDate.ToString("yyyy-MM-dd HH:m:ss")),
-                        new XElement("content", comment.Content),
-                        new XAttribute("isAdmin", comment.IsAdmin),
-                        new XAttribute("id", comment.ID)
-                    ));
-            }
-
-            using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite))
-            {
-                await doc.SaveAsync(fs, SaveOptions.None, CancellationToken.None).ConfigureAwait(false);
-            }
-
-            if (!_cache.Contains(post))
-            {
-                _cache.Add(post);
-                SortCache();
-            }
-        }
-
-        public Task DeletePostAsync(Post post)
-        {
-            string filePath = GetFilePath(post);
-
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            if (_cache.Contains(post))
-            {
-                _cache.Remove(post);
-            }
-
-            return Task.CompletedTask;
-        }
-
 
         #endregion Private Method
     }

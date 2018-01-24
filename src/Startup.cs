@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Miniblog.Core.Repository;
+using Miniblog.Core.Repository.MongoDB;
 using Miniblog.Core.Services;
 using WebEssentials.AspNetCore.OutputCaching;
 using WebMarkupMin.AspNetCore2;
@@ -42,13 +44,21 @@ namespace Miniblog.Core
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<BlogSettings>(Configuration.GetSection("blog"));
+            services.Configure<MongoDbDatabaseSetting>(Configuration.GetSection("MongoDBDatabaseSetting"));
+
             services.AddMvc();
 
             services.AddSingleton<IUserServices, BlogUserServices>();
-            services.AddSingleton<IBlogService, FileBlogService>();
-            services.Configure<BlogSettings>(Configuration.GetSection("blog"));
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMetaWeblog<MetaWeblogService>();
+            //services.AddSingleton<IBlogService, FileBlogService>();
+            //services.AddSingleton<IBlogRepository, BlogXmlRepository>();
+            //services.AddSingleton<IFileRepository, FileDiskRepository>();
+
+            services.AddScoped<IBlogService, FileBlogService>();
+            services.AddScoped<IBlogRepository, BlogMongoDBRepository>();
+            services.AddScoped<IFileRepository, FileDiskRepository>();
 
             // Progressive Web Apps https://github.com/madskristensen/WebEssentials.AspNetCore.ServiceWorker
             services.AddProgressiveWebApp(new WebEssentials.AspNetCore.Pwa.PwaOptions

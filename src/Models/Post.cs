@@ -9,8 +9,7 @@ namespace Miniblog.Core.Models
 {
     public class Post
     {
-        [Required]
-        public string ID { get; set; } = DateTime.UtcNow.Ticks.ToString();
+        public string ID { get; set; } 
 
         [Required]
         public string Title { get; set; }
