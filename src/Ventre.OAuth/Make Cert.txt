@@ -1,0 +1,7 @@
+﻿$cert = New-SelfSignedCertificate -DnsName aouth.azurewebsites.net -Type CodeSigning -CertStoreLocation Cert:\CurrentUser\My
+
+$cert = New-SelfSignedCertificate -DnsName aouth.azurewebsites.net -Type CodeSigning -CertStoreLocation Cert:\LocalMachine\My
+
+$CertPassword = ConvertTo-SecureString -String "Drottningg68" -Force –AsPlainText
+
+Export-PfxCertificate -Cert "cert:CurrentUser\My\$($cert.Thumbprint)" -FilePath "d:\OdesusDev.pfx" -Password $CertPassword

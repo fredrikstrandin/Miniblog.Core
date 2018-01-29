@@ -264,3 +264,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/src/Ventre.OAuth/appsettings.AzureDevelopment.json
+/src/Ventre.OAuth/appsettings.Docker.json

@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <ApplicationInsightsResourceId>/subscriptions/7baeaf4f-7783-4feb-9833-d77e8bc70932/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/Vivus.OAuth</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/7baeaf4f-7783-4feb-9833-d77e8bc70932/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/Vivus.OAuth</ApplicationInsightsAnnotationResourceId>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>27556198-fbd1-4fec-a504-8d0fad2653ee</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GlobalExceptionHandler" Version="3.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.LinkedIn" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Https" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Azure.KeyVault.Core" Version="2.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
+    <PackageReference Include="Serilog" Version="2.6.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Rewrite">
+      <HintPath>..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.rewrite\2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Rewrite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IdentityServer4.MongoDB\IdentityServer4.MongoDB.csproj" />
+    <ProjectReference Include="..\Venter.Service\Venter.Service.csproj" />
+    <ProjectReference Include="..\Venter.Utills\Venter.Utills.csproj" />
+    <ProjectReference Include="..\Vivius.Interface\Vivius.Interface.csproj" />
+    <ProjectReference Include="..\Vivius.MongoDBUtills\Vivius.MongoDBUtills.csproj" />
+    <ProjectReference Include="..\Vivius.Repository\Vivius.Repository.csproj" />
+    <ProjectReference Include="..\Vivus.Model\Vivus.Model.csproj" />
+  </ItemGroup>
+</Project>

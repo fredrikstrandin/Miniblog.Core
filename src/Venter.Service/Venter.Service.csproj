@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="3.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\User\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vivius.Interface\Vivius.Interface.csproj" />
+    <ProjectReference Include="..\Vivus.Model\Vivus.Model.csproj" />
+  </ItemGroup>
+
+</Project>
