@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Miniblog.Core.Models;
+using Miniblog.Core.Repository.MongoDB.Model;
 using Miniblog.Core.Repository.MongoDB.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -26,7 +27,7 @@ namespace Miniblog.Core.Repository.MongoDB
         public async Task<IEnumerable<Post>> GetPostsAsync(bool isAdmin, int count, int skip)
         {
             IEnumerable<Post> posts = await _context.PostEntityCollection
-                .Find(p => p.PubDate <= DateTime.UtcNow && (p.IsPublished || isAdmin))
+                .Find(p => p.PubDate <= DateTime.UtcNow && (p.Status == Status.Publish || isAdmin))
                 .Project(x => (Post)x)
                 .Skip(skip)
                 .Limit(count)
@@ -38,7 +39,7 @@ namespace Miniblog.Core.Repository.MongoDB
         public async Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category, bool isAdmin)
         {
             IEnumerable<Post> posts = await _context.PostEntityCollection
-                .Find(p => p.PubDate <= DateTime.UtcNow && p.IsPublished &&
+                .Find(p => p.PubDate <= DateTime.UtcNow && p.Status == Status.Publish &&
                     p.Categories.Contains(category))
                 .Project(x => (Post)x)
                 .ToListAsync();
@@ -49,7 +50,7 @@ namespace Miniblog.Core.Repository.MongoDB
         public async Task<Post> GetPostBySlugAsync(string slug, bool isAdmin)
         {
             PostEntity post = await _context.PostEntityCollection
-                .Find(p => p.SlugNormalize == slug && p.PubDate <= DateTime.UtcNow && p.IsPublished)
+                .Find(p => p.SlugNormalize == slug && p.PubDate <= DateTime.UtcNow && p.Status == Status.Publish)
                 .FirstOrDefaultAsync();
 
             return post;
@@ -62,36 +63,34 @@ namespace Miniblog.Core.Repository.MongoDB
             if (ObjectId.TryParse(id, out ObjectId postId))
             {
                 post = await _context.PostEntityCollection
-                    .Find(p => p.Id == postId && p.PubDate <= DateTime.UtcNow && p.IsPublished)
+                    .Find(p => p.Id == postId && p.PubDate <= DateTime.UtcNow && p.Status == Status.Publish)
                     .FirstOrDefaultAsync();
             }
 
             return post;
         }
-        public async Task<IEnumerable<string>> GetCategoriesAsync(bool isAdmin)
-        {
-            var categories = await _context.CategorieEntityCollection
-                    .Find(x => true)
-                    .Project(x => x.Name)
-                    .ToListAsync();
-
-            return categories;
-        }
-
-        public async Task SavePostAsync(Post post)
+        
+        public async Task<string> SavePostAsync(Post post)
         {
             post.LastModified = DateTime.UtcNow;
 
-            //TODO: Check if update or Insert.
+            PostEntity postEntity = post;
 
-            await _context.PostEntityCollection.InsertOneAsync(post);
-            foreach (var item in post.Categories)
+            await _context.PostEntityCollection.InsertOneAsync(postEntity);
+
+            if (post.Status == Status.Publish)
             {
-                if (await _context.CategorieEntityCollection.CountAsync(x => x.Name == item) == 0)
+                foreach (var item in post.Categories)
                 {
-                    await _context.CategorieEntityCollection.InsertOneAsync(new Model.CategorieEntity() { Name = item });
+                    var filter = Builders<CategoryEntity>.Filter
+                        .And(Builders<CategoryEntity>.Filter.Where(x => x.Name == item));
+                    var update = Builders<CategoryEntity>.Update.Inc(x => x.Count, 1);
+
+                    var temp = await _context.CategorieEntityCollection.UpdateOneAsync(filter, update, new UpdateOptions() { IsUpsert = true });
                 }
             }
+
+            return postEntity.Id.ToString();
         }
 
         public async Task DeletePostAsync(Post post)
@@ -104,25 +103,83 @@ namespace Miniblog.Core.Repository.MongoDB
         
         public async Task UpdatePostAsync(Post existing)
         {
-            ObjectId postId;
-
-            if (!ObjectId.TryParse(existing.ID, out postId))
+            if (!ObjectId.TryParse(existing.ID, out ObjectId postId))
             {
                 return;
             }
 
+            if (!ObjectId.TryParse(existing.BlogId, out ObjectId blogId))
+            {
+                return;
+            }
+
+            if (existing.Status == Status.Publish)
+            {
+                List<string> categoryNew = new List<string>();
+
+                List<string> categorysOld = (await GetCategoryAsync(existing.ID)) ?? new List<string>();
+
+                foreach (var item in existing.Categories)
+                {
+                    if (categorysOld.Contains(item))
+                    {
+                        categorysOld.Remove(item);
+                    }
+                    else
+                    {
+                        categoryNew.Add(item);
+                    }
+                }
+
+                foreach (var item in categoryNew)
+                {
+                    await _context.CategorieEntityCollection.UpdateOneAsync(
+                        Builders<CategoryEntity>.Filter
+                            .And(Builders<CategoryEntity>.Filter.Where(x => x.Name == item)),
+                        Builders<CategoryEntity>.Update.Inc(x => x.Count, 1),
+                        new UpdateOptions() { IsUpsert = true });
+                }
+
+                foreach (var item in categorysOld)
+                {
+                    await _context.CategorieEntityCollection.UpdateOneAsync(
+                        Builders<CategoryEntity>.Filter
+                            .And(Builders<CategoryEntity>.Filter.Where(x => x.Name == item)),
+                        Builders<CategoryEntity>.Update.Inc(x => x.Count, -1),
+                        new UpdateOptions() { IsUpsert = true });
+                }
+            }
+
             var filter = Builders<PostEntity>.Filter.And(Builders<PostEntity>.Filter.Where(x => x.Id == postId));
             var update = Builders<PostEntity>.Update
+                .Set(x => x.BlogId, blogId)
                 .Set(x => x.Categories, existing.Categories)
                 .Set(x => x.Content, existing.Content)
                 .Set(x => x.Excerpt, existing.Excerpt)
-                .Set(x => x.IsPublished, existing.IsPublished)
+                .Set(x => x.Status, existing.Status)
                 .Set(x => x.LastModified, DateTime.UtcNow)
                 .Set(x => x.PubDate, existing.PubDate)
                 .Set(x => x.Slug, existing.Slug)
                 .Set(x => x.Title, existing.Title);
             
             var post = await _context.PostEntityCollection.FindOneAndUpdateAsync(filter, update);
+        }
+
+        public async Task<List<string>> GetCategoryAsync(string id)
+        {
+            if(!ObjectId.TryParse(id, out ObjectId blogId))
+            {
+                return new List<string>();
+            }
+
+            var filter = Builders<BlogEntity>.Filter.ElemMatch(x => x.Categorys, x => x.Count > 0) 
+                & Builders<BlogEntity>.Filter.Eq(x => x.Id, blogId);
+            
+            List<CategoryEntity> ret = await _context.BlogEntityCollection.Find(filter)
+                .Project(x => x.Categorys)
+                .FirstOrDefaultAsync();
+
+            return ret.Select(x => x.Name).ToList();
         }
 
         public async Task AddCommentAsync(string id, Comment comment)

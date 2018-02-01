@@ -15,7 +15,7 @@ namespace Miniblog.Core.Repository.MongoDB.Models
     {
         [BsonId]
         public ObjectId Id { get; set; }
-
+        public ObjectId  BlogId { get; set; }
         public string Title { get; set; }
 
         public string Slug { get; set; }
@@ -28,7 +28,7 @@ namespace Miniblog.Core.Repository.MongoDB.Models
 
         public DateTime LastModified { get; set; } = DateTime.UtcNow;
 
-        public bool IsPublished { get; set; } = true;
+        public Status Status { get; set; }
 
         [BsonIgnoreIfNull]
         public IList<string> Categories { get; set; } = new List<string>();
@@ -48,7 +48,7 @@ namespace Miniblog.Core.Repository.MongoDB.Models
                 Categories = item.Categories,
                 Content = item.Content,
                 Excerpt = item.Excerpt,
-                IsPublished = item.IsPublished,
+                Status = item.Status,
                 LastModified = item.LastModified,
                 PubDate = item.PubDate,
                 Slug = item.Slug
@@ -78,7 +78,7 @@ namespace Miniblog.Core.Repository.MongoDB.Models
                 Categories = item.Categories,
                 Content = item.Content,
                 Excerpt = item.Excerpt,
-                IsPublished = item.IsPublished,
+                Status = item.Status,
                 LastModified = item.LastModified,
                 PubDate = item.PubDate,
                 Slug = item.Slug

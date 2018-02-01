@@ -13,15 +13,15 @@ namespace Miniblog.Core.Services
         Task<IEnumerable<Post>> GetPostsByCategory(string category);
         Task<Post> GetPostBySlug(string slug);
         Task<Post> GetPostById(string id);
-        Task<IEnumerable<string>> GetCategories();
-        Task SavePost(Post post);
+        Task<IEnumerable<string>> GetCategoryAsync(string blogId);
+        Task<string> SavePost(Post post);
         Task DeletePost(Post post);
         Task<string> SaveFile(byte[] bytes, string fileName, string suffix = null);
         Task AddCommentAsync(string iD, Comment comment);
         Task UpdatePostAsync(Post existing);
     }
 
-    public abstract class InMemoryBlogServiceBase : IBlogService
+    public abstract class InMemoryBlogServiceBase //: IBlogService
     {
         public InMemoryBlogServiceBase(IHttpContextAccessor contextAccessor)
         {
@@ -36,7 +36,7 @@ namespace Miniblog.Core.Services
             bool isAdmin = IsAdmin();
 
             var posts = Cache
-                .Where(p => p.PubDate <= DateTime.UtcNow && (p.IsPublished || isAdmin))
+                .Where(p => p.PubDate <= DateTime.UtcNow && (p.Status == Status.Publish || isAdmin))
                 .Skip(skip)
                 .Take(count);
 
@@ -48,7 +48,7 @@ namespace Miniblog.Core.Services
             bool isAdmin = IsAdmin();
 
             var posts = from p in Cache
-                        where p.PubDate <= DateTime.UtcNow && (p.IsPublished || isAdmin)
+                        where p.PubDate <= DateTime.UtcNow && (p.Status == Status.Publish || isAdmin)
                         where p.Categories.Contains(category, StringComparer.OrdinalIgnoreCase)
                         select p;
 
@@ -61,7 +61,7 @@ namespace Miniblog.Core.Services
             var post = Cache.FirstOrDefault(p => p.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
             bool isAdmin = IsAdmin();
 
-            if (post != null && post.PubDate <= DateTime.UtcNow && (post.IsPublished || isAdmin))
+            if (post != null && post.PubDate <= DateTime.UtcNow && (post.Status == Status.Publish || isAdmin))
             {
                 return Task.FromResult(post);
             }
@@ -74,7 +74,7 @@ namespace Miniblog.Core.Services
             var post = Cache.FirstOrDefault(p => p.ID.Equals(id, StringComparison.OrdinalIgnoreCase));
             bool isAdmin = IsAdmin();
 
-            if (post != null && post.PubDate <= DateTime.UtcNow && (post.IsPublished || isAdmin))
+            if (post != null && post.PubDate <= DateTime.UtcNow && (post.Status == Status.Publish || isAdmin))
             {
                 return Task.FromResult(post);
             }
@@ -87,7 +87,7 @@ namespace Miniblog.Core.Services
             bool isAdmin = IsAdmin();
 
             var categories = Cache
-                .Where(p => p.IsPublished || isAdmin)
+                .Where(p => p.Status == Status.Publish || isAdmin)
                 .SelectMany(post => post.Categories)
                 .Select(cat => cat.ToLowerInvariant())
                 .Distinct();

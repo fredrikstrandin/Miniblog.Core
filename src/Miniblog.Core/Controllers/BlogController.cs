@@ -106,7 +106,7 @@ namespace Miniblog.Core.Controllers
             existing.Categories = categories.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim().ToLowerInvariant()).ToList();
             existing.Title = post.Title.Trim();
             existing.Slug = !string.IsNullOrWhiteSpace(post.Slug) ? post.Slug : post.Title.GenerateSlug();
-            existing.IsPublished = post.IsPublished;
+            existing.Status = post.Status;
             existing.Content = post.Content.Trim();
             existing.Excerpt = post.Excerpt.Trim();
 
@@ -195,7 +195,7 @@ namespace Miniblog.Core.Controllers
                 await _blog.AddCommentAsync(post.ID, comment);
             }
 
-            return Redirect(post.GetLink() + "#" + comment.ID);
+            return Redirect(post.GetLink() + "#" + comment.Id);
         }
 
         [Route("/blog/comment/{postId}/{commentId}")]
@@ -209,7 +209,7 @@ namespace Miniblog.Core.Controllers
                 return NotFound();
             }
 
-            var comment = post.Comments.FirstOrDefault(c => c.ID.Equals(commentId, StringComparison.OrdinalIgnoreCase));
+            var comment = post.Comments.FirstOrDefault(c => c.Id.Equals(commentId, StringComparison.OrdinalIgnoreCase));
 
             if (comment == null)
             {

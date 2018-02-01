@@ -10,9 +10,9 @@ namespace Miniblog.Core.Repository
         Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category, bool isAdmin);
         Task<Post> GetPostBySlugAsync(string slug, bool isAdmin);
         Task<Post> GetPostByIdAsync(string id, bool isAdmin);
-        Task<IEnumerable<string>> GetCategoriesAsync(bool isAdmin);
-        Task SavePostAsync(Post post);
+        Task<string> SavePostAsync(Post post);
         Task DeletePostAsync(Post post);
+        Task<List<string>> GetCategoryAsync(string id);
         Task AddCommentAsync(string id, Comment comment);
         Task UpdatePostAsync(Post existing);
     }

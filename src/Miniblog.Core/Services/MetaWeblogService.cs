@@ -8,6 +8,7 @@ using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Miniblog.Core.Models;
 using Venter.Utilities;
 using WilderMinds.MetaWeblog;
 
@@ -30,14 +31,14 @@ namespace Miniblog.Core.Services
 
         public string AddPost(string blogid, string username, string password, WilderMinds.MetaWeblog.Post post, bool publish)
         {
-            ValidateUserAsync(username, password).GetAwaiter();
+            ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
 
             var newPost = new Models.Post
             {
                 Title = post.title,
                 Slug = !string.IsNullOrWhiteSpace(post.wp_slug) ? post.wp_slug : post.title.GenerateSlug(),
                 Content = post.description,
-                IsPublished = publish,
+                Status = publish?Status.Publish:Status.Draft,
                 Categories = post.categories
             };
 
@@ -46,14 +47,12 @@ namespace Miniblog.Core.Services
                 newPost.PubDate = post.dateCreated;
             }
 
-            _blog.SavePost(newPost).GetAwaiter().GetResult();
-
-            return newPost.ID;
+            return _blog.SavePost(newPost).GetAwaiter().GetResult();            
         }
 
         public bool DeletePost(string key, string postid, string username, string password, bool publish)
         {
-            ValidateUserAsync(username, password).GetAwaiter();
+            ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
 
             var post = _blog.GetPostById(postid).GetAwaiter().GetResult();
 
@@ -68,7 +67,7 @@ namespace Miniblog.Core.Services
 
         public bool EditPost(string postid, string username, string password, WilderMinds.MetaWeblog.Post post, bool publish)
         {
-            ValidateUserAsync(username, password).GetAwaiter();
+            ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
 
             var existing = _blog.GetPostById(postid).GetAwaiter().GetResult();
 
@@ -77,7 +76,7 @@ namespace Miniblog.Core.Services
                 existing.Title = post.title;
                 existing.Slug = post.wp_slug;
                 existing.Content = post.description;
-                existing.IsPublished = publish;
+                existing.Status = publish?Status.Publish:Status.Draft;
                 existing.Categories = post.categories;
 
                 if (post.dateCreated != DateTime.MinValue)
@@ -85,7 +84,7 @@ namespace Miniblog.Core.Services
                     existing.PubDate = post.dateCreated;
                 }
 
-                _blog.SavePost(existing).GetAwaiter().GetResult();
+                _blog.UpdatePostAsync(existing).GetAwaiter().GetResult();
 
                 return true;
             }
@@ -95,9 +94,9 @@ namespace Miniblog.Core.Services
 
         public CategoryInfo[] GetCategories(string blogid, string username, string password)
         {
-            ValidateUserAsync(username, password).GetAwaiter();
+            ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
 
-            return _blog.GetCategories().GetAwaiter().GetResult()
+            return _blog.GetCategoryAsync(blogid).GetAwaiter().GetResult()
                            .Select(cat =>
                                new CategoryInfo
                                {
@@ -109,8 +108,8 @@ namespace Miniblog.Core.Services
 
         public WilderMinds.MetaWeblog.Post GetPost(string postid, string username, string password)
         {
-            ValidateUserAsync(username, password).GetAwaiter();
-
+            ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
+            
             var post = _blog.GetPostById(postid).GetAwaiter().GetResult();
 
             if (post != null)
@@ -132,7 +131,7 @@ namespace Miniblog.Core.Services
 
         public BlogInfo[] GetUsersBlogs(string key, string username, string password)
         {
-            ValidateUserAsync(username, password).GetAwaiter();
+            ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
 
             var request = _context.HttpContext.Request;
             string url = request.Scheme + "://" + request.Host;
@@ -140,17 +139,17 @@ namespace Miniblog.Core.Services
             return new[] 
             {
                 new BlogInfo {
-                    blogid ="1",
+                    blogid ="5a6c7da8ff576f24305bec24",
                     blogName = "Odesus", //_config["blog:name"],
                     url = url
                 },
                     new BlogInfo {
-                    blogid ="2",
+                    blogid ="5a6c7e71ff576f24305bec26",
                     blogName = "Viktor", //_config["blog:name"],
                     url = url
                 },
                 new BlogInfo {
-                    blogid ="1",
+                    blogid ="5a6c80efe864a2247c6b3503",
                     blogName = "Marija", //_config["blog:name"],
                     url = url
                 }
@@ -159,7 +158,7 @@ namespace Miniblog.Core.Services
 
         public MediaObjectInfo NewMediaObject(string blogid, string username, string password, MediaObject mediaObject)
         {
-            ValidateUserAsync(username, password).GetAwaiter();
+            ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
             byte[] bytes = Convert.FromBase64String(mediaObject.bits);
             string path = _blog.SaveFile(bytes, mediaObject.name).GetAwaiter().GetResult();
 
@@ -168,14 +167,14 @@ namespace Miniblog.Core.Services
 
         public UserInfo GetUserInfo(string key, string username, string password)
         {
-            ValidateUserAsync(username, password).GetAwaiter();
+            ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
 
             throw new NotImplementedException();
         }
 
         public int AddCategory(string key, string username, string password, NewCategory category)
         {
-            ValidateUserAsync(username, password).GetAwaiter();
+            ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
             throw new NotImplementedException();
         }
 

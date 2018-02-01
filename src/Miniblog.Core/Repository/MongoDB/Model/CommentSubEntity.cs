@@ -28,7 +28,7 @@ namespace Miniblog.Core.Repository.MongoDB.Models
             if (item == null)
                 return null;
 
-            if (!ObjectId.TryParse(item.ID, out id))
+            if (!ObjectId.TryParse(item.Id, out id))
             {
                 id = ObjectId.GenerateNewId();
             }
@@ -53,7 +53,7 @@ namespace Miniblog.Core.Repository.MongoDB.Models
             
             Comment comment = new Comment()
             {
-                ID = item.CommentId.ToString(),
+                Id = item.CommentId.ToString(),
                 Author = item.Author,
                 Content = item.Content,
                 Email = item.Email,

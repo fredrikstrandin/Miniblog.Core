@@ -20,9 +20,10 @@ namespace Miniblog.Core.Repository.MongoDB
             Client = new MongoClient(_dbStetting.ConnectionString);
             Database = Client.GetDatabase(_dbStetting.Database);
         }
-        
+
+        internal IMongoCollection<UserEntity> UserEntityCollection => Database.GetCollection<UserEntity>("UserEntity");
         internal IMongoCollection<PostEntity> PostEntityCollection => Database.GetCollection<PostEntity>("PostEntity");
-        internal IMongoCollection<CategorieEntity> CategorieEntityCollection => Database.GetCollection<CategorieEntity>("CategorieEntity");
+        internal IMongoCollection<CategoryEntity> CategorieEntityCollection => Database.GetCollection<CategoryEntity>("CategoryEntity");
         internal IMongoCollection<BlogEntity> BlogEntityCollection => Database.GetCollection<BlogEntity>("BlogEntity");
     }
 }

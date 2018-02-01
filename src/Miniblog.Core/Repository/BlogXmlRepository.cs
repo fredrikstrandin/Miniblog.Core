@@ -14,7 +14,7 @@ using System.Xml.XPath;
 
 namespace Miniblog.Core.Repository
 {
-    public class BlogXmlRepository : IBlogRepository
+    public class BlogXmlRepository //: IBlogRepository
     {
         private readonly List<Post> _cache = new List<Post>();
         private readonly string _folder;
@@ -43,7 +43,7 @@ namespace Miniblog.Core.Repository
         {
             return await Task.Run(() =>
             {
-                IEnumerable<Post> posts = _cache.Where(p => p.PubDate <= DateTime.UtcNow && (p.IsPublished || isAdmin))
+                IEnumerable<Post> posts = _cache.Where(p => p.PubDate <= DateTime.UtcNow && (p.Status == Status.Publish || isAdmin))
                     .Skip(skip)
                     .Take(count);
 
@@ -56,7 +56,7 @@ namespace Miniblog.Core.Repository
             return await Task.Run(() =>
             {
                 IEnumerable<Post> posts = from p in _cache
-                                          where p.PubDate <= DateTime.UtcNow && (p.IsPublished || isAdmin)
+                                          where p.PubDate <= DateTime.UtcNow && (p.Status == Status.Publish || isAdmin)
                                           where p.Categories.Contains(category, StringComparer.OrdinalIgnoreCase)
                                           select p;
 
@@ -70,7 +70,7 @@ namespace Miniblog.Core.Repository
             {
                 Post post = _cache.FirstOrDefault(p => p.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
                 
-                if (post != null && post.PubDate <= DateTime.UtcNow && (post.IsPublished || isAdmin))
+                if (post != null && post.PubDate <= DateTime.UtcNow && (post.Status == Status.Publish || isAdmin))
                 {
                     return Task.FromResult(post);
                 }
@@ -85,7 +85,7 @@ namespace Miniblog.Core.Repository
             {
                 var post = _cache.FirstOrDefault(p => p.ID.Equals(id, StringComparison.OrdinalIgnoreCase));
                 
-                if (post != null && post.PubDate <= DateTime.UtcNow && (post.IsPublished || isAdmin))
+                if (post != null && post.PubDate <= DateTime.UtcNow && (post.Status == Status.Publish || isAdmin))
                 {
                     return Task.FromResult(post);
                 }
@@ -100,7 +100,7 @@ namespace Miniblog.Core.Repository
             return await Task.Run(() =>
             {
                 var categories = _cache
-                    .Where(p => p.IsPublished || isAdmin)
+                    .Where(p => p.Status == Status.Publish || isAdmin)
                     .SelectMany(post => post.Categories)
                     .Select(cat => cat.ToLowerInvariant())
                     .Distinct();
@@ -123,7 +123,7 @@ namespace Miniblog.Core.Repository
                                 new XElement("lastModified", post.LastModified.ToString("yyyy-MM-dd HH:mm:ss")),
                                 new XElement("excerpt", post.Excerpt),
                                 new XElement("content", post.Content),
-                                new XElement("ispublished", post.IsPublished),
+                                new XElement("ispublished", post.Status),
                                 new XElement("categories", string.Empty),
                                 new XElement("comments", string.Empty)
                             ));
@@ -144,7 +144,7 @@ namespace Miniblog.Core.Repository
                         new XElement("date", comment.PubDate.ToString("yyyy-MM-dd HH:m:ss")),
                         new XElement("content", comment.Content),
                         new XAttribute("isAdmin", comment.IsAdmin),
-                        new XAttribute("id", comment.ID)
+                        new XAttribute("id", comment.Id)
                     ));
             }
 
@@ -249,7 +249,7 @@ namespace Miniblog.Core.Repository
             {
                 Comment comment = new Comment()
                 {
-                    ID = ReadAttribute(node, "id"),
+                    Id = ReadAttribute(node, "id"),
                     Author = ReadValue(node, "author"),
                     Email = ReadValue(node, "email"),
                     IsAdmin = bool.Parse(ReadAttribute(node, "isAdmin", "false")),
@@ -283,6 +283,11 @@ namespace Miniblog.Core.Repository
         }
 
         public Task UpdatePostAsync(Post existing)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<string>> GetCategoryAsync(string id)
         {
             throw new NotImplementedException();
         }

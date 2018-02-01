@@ -10,8 +10,8 @@ namespace Miniblog.Core.Models
 {
     public class Post
     {
-        public string ID { get; set; } 
-
+        public string ID { get; set; }
+        public string BlogId { get; set; }
         [Required]
         public string Title { get; set; }
 
@@ -28,7 +28,7 @@ namespace Miniblog.Core.Models
 
         public DateTime LastModified { get; set; } = DateTime.UtcNow;
 
-        public bool IsPublished { get; set; } = true;
+        public Status Status { get; set; }
 
         public IList<string> Categories { get; set; } = new List<string>();
 

@@ -69,18 +69,16 @@ namespace Miniblog.Core.Services
             return post;
         }
 
-        public async virtual Task<IEnumerable<string>> GetCategories()
+        public async virtual Task<IEnumerable<string>> GetCategoryAsync(string blogId)
         {
-            bool isAdmin = IsAdmin();
-
-            IEnumerable<string> categories = await _blogRepository.GetCategoriesAsync(isAdmin);
+            IEnumerable<string> categories = await _blogRepository.GetCategoryAsync(blogId);
                         
             return categories;
         }
 
-        public async Task SavePost(Post post)
+        public async Task<string> SavePost(Post post)
         {
-            await _blogRepository.SavePostAsync(post);            
+            return await _blogRepository.SavePostAsync(post);            
         }
 
         public async Task DeletePost(Post post)

@@ -1,7 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 using Venter.Utilities;
+using WilderMinds.MetaWeblog;
 
 namespace Miniblog.Core.Repository.MongoDB.Model
 {
@@ -13,8 +15,8 @@ namespace Miniblog.Core.Repository.MongoDB.Model
         public String SubTitle { get; set; }
         public string SubDomain { get; set; }
         public string SubDomainNormalize { get { return SubDomain.GenerateSlug(); } private set { } }
-        public string Owner { get; set; }
         public int PostsPerPage { get; set; }
         public int CommentsCloseAfterDays { get; set; }
+        public List<CategoryEntity> Categorys { get; set; }
     }
 }
