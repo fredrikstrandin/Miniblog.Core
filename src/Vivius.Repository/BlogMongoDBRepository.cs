@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Miniblog.Core.Model.Setting;
 using Miniblog.Core.Models;
 using Miniblog.Core.Repository.MongoDB.Model;
 using Miniblog.Core.Repository.MongoDB.Models;
@@ -9,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Miniblog.Core.Repository;
+using Vivus.Model;
 
 namespace Miniblog.Core.Repository.MongoDB
 {
@@ -24,25 +27,45 @@ namespace Miniblog.Core.Repository.MongoDB
             _context = new MongoDBContext(_dbStetting.Value);
         }
 
-        public async Task<IEnumerable<Post>> GetPostsAsync(bool isAdmin, int count, int skip)
+        public async Task<IEnumerable<Post>> GetPostsAsync(string blogId, bool isAdmin, int count, int skip)
         {
-            IEnumerable<Post> posts = await _context.PostEntityCollection
-                .Find(p => p.PubDate <= DateTime.UtcNow && (p.Status == Status.Publish || isAdmin))
-                .Project(x => (Post)x)
-                .Skip(skip)
-                .Limit(count)
-                .ToListAsync();
+            IEnumerable<Post> posts;
 
+            if (string.IsNullOrEmpty(blogId))
+            {
+                posts = await _context.PostEntityCollection
+                    .Find(p => p.PubDate <= DateTime.UtcNow && (p.Status == Status.Publish || isAdmin))
+                    .Project(x => (Post)x)
+                    .Skip(skip)
+                    .Limit(count)
+                    .ToListAsync();
+            }
+            else
+            {
+                if (!ObjectId.TryParse(blogId, out ObjectId id))
+                {
+                    return null;
+                }
+
+                posts = await _context.PostEntityCollection
+                    .Find(p => p.BlogId == id && p.PubDate <= DateTime.UtcNow && (p.Status == Status.Publish || isAdmin))
+                    .Project(x => (Post)x)
+                    .Skip(skip)
+                    .Limit(count)
+                    .ToListAsync();
+            }
             return posts;
         }
 
-        public async Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category, bool isAdmin)
+        public async Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category, bool isAdmin, int count, int skip)
         {
             IEnumerable<Post> posts = await _context.PostEntityCollection
                 .Find(p => p.PubDate <= DateTime.UtcNow && p.Status == Status.Publish &&
                     p.Categories.Contains(category))
                 .Project(x => (Post)x)
-                .ToListAsync();
+                .Skip(skip)
+                    .Limit(count)
+                    .ToListAsync();
 
             return posts;
         }
@@ -69,7 +92,7 @@ namespace Miniblog.Core.Repository.MongoDB
 
             return post;
         }
-        
+
         public async Task<string> SavePostAsync(Post post)
         {
             post.LastModified = DateTime.UtcNow;
@@ -95,15 +118,15 @@ namespace Miniblog.Core.Repository.MongoDB
 
         public async Task DeletePostAsync(Post post)
         {
-            if (!ObjectId.TryParse(post.ID, out ObjectId id))
+            if (!ObjectId.TryParse(post.Id, out ObjectId id))
                 return;
 
             await _context.PostEntityCollection.DeleteOneAsync(x => x.Id == id);
         }
-        
+
         public async Task UpdatePostAsync(Post existing)
         {
-            if (!ObjectId.TryParse(existing.ID, out ObjectId postId))
+            if (!ObjectId.TryParse(existing.Id, out ObjectId postId))
             {
                 return;
             }
@@ -117,7 +140,7 @@ namespace Miniblog.Core.Repository.MongoDB
             {
                 List<string> categoryNew = new List<string>();
 
-                List<string> categorysOld = (await GetCategoryAsync(existing.ID)) ?? new List<string>();
+                List<string> categorysOld = (await GetCategoryAsync(existing.Id)) ?? new List<string>();
 
                 foreach (var item in existing.Categories)
                 {
@@ -161,20 +184,20 @@ namespace Miniblog.Core.Repository.MongoDB
                 .Set(x => x.PubDate, existing.PubDate)
                 .Set(x => x.Slug, existing.Slug)
                 .Set(x => x.Title, existing.Title);
-            
+
             var post = await _context.PostEntityCollection.FindOneAndUpdateAsync(filter, update);
         }
 
         public async Task<List<string>> GetCategoryAsync(string id)
         {
-            if(!ObjectId.TryParse(id, out ObjectId blogId))
+            if (!ObjectId.TryParse(id, out ObjectId blogId))
             {
                 return new List<string>();
             }
 
-            var filter = Builders<BlogEntity>.Filter.ElemMatch(x => x.Categorys, x => x.Count > 0) 
+            var filter = Builders<BlogEntity>.Filter.ElemMatch(x => x.Categorys, x => x.Count > 0)
                 & Builders<BlogEntity>.Filter.Eq(x => x.Id, blogId);
-            
+
             List<CategoryEntity> ret = await _context.BlogEntityCollection.Find(filter)
                 .Project(x => x.Categorys)
                 .FirstOrDefaultAsync();
@@ -195,6 +218,11 @@ namespace Miniblog.Core.Repository.MongoDB
             var update = Builders<PostEntity>.Update.AddToSet(x => x.Comments, com);
 
             var post = await _context.PostEntityCollection.FindOneAndUpdateAsync(filter, update);
+        }
+
+        public async Task<BlogItem> FindBlogAsync(string subdomain)
+        {
+            return await _context.BlogEntityCollection.Find(x => x.SubDomainNormalize == subdomain).FirstOrDefaultAsync();
         }
     }
 }

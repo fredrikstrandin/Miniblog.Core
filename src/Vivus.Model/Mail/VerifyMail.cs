@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vivius.Model.Mail
+namespace Miniblog.Core.Model.Mail
 {
     public class VerifyMail
     {

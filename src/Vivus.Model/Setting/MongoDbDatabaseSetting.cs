@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vivius.Model.Setting
+namespace Miniblog.Core.Model.Setting
 {
     public class MongoDbDatabaseSetting
     {

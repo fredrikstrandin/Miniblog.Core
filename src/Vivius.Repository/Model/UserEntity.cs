@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Venter.Utilities.Converter;
-using Vivius.Model.User;
-using Vivius.Model.Utils;
+using Miniblog.Core.Model.User;
+using Miniblog.Core.Model.Utils;
 
-namespace Vivius.Repository.Model
+namespace Miniblog.Core.Repository.Model
 {
     [BsonIgnoreExtraElements]
     internal class UserEntity : BaseEntity
@@ -61,6 +61,9 @@ namespace Vivius.Repository.Model
         [BsonIgnoreIfDefault]
         public string Summary { get; set; }
         public DateTime LastLoginTime { get; set; }
+        public string NickName { get; set; }
+        public string About { get; set; }
+        public List<ObjectId> BlogOwnerList { get; set; }
 
         public static implicit operator UserEntity(UserItem item)
         {

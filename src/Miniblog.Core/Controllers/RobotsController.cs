@@ -51,7 +51,7 @@ namespace Miniblog.Core.Controllers
                 xml.WriteStartDocument();
                 xml.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
 
-                var posts = await _blog.GetPosts(int.MaxValue);
+                var posts = await _blog.GetPostsAsync(null, int.MaxValue);
 
                 foreach (Models.Post post in posts)
                 {
@@ -109,7 +109,7 @@ namespace Miniblog.Core.Controllers
 
             using (XmlWriter xmlWriter = XmlWriter.Create(Response.Body, new XmlWriterSettings() { Async = true, Indent = true }))
             {
-                var posts = await _blog.GetPosts(10);
+                var posts = await _blog.GetPostsAsync(null, 10);
                 var writer = await GetWriter(type, xmlWriter, posts.Max(p => p.PubDate));
 
                 foreach (Models.Post post in posts)

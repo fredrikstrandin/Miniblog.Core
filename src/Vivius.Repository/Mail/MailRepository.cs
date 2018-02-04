@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Vivius.Model.Mail;
-using Vivius.Model.Setting;
+using Miniblog.Core.Model.Mail;
+using Miniblog.Core.Model.Setting;
 
-namespace Vivius.Repository.Mail
+namespace Miniblog.Core.Repository.Mail
 {
     public class MailRepository : IMailRepository
     {

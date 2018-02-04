@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Vivius.MongoDBUtills
+namespace Miniblog.Core.MongoDBUtills
 {
     public class MongoDBDistributedCache : IDistributedCache
     {

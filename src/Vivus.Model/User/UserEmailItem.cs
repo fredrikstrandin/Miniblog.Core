@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vivius.Model.User
+namespace Miniblog.Core.Model.User
 {
     public class UserEmailItem
     {

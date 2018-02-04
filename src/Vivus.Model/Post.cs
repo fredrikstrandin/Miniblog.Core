@@ -10,7 +10,7 @@ namespace Miniblog.Core.Models
 {
     public class Post
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
         public string BlogId { get; set; }
         [Required]
         public string Title { get; set; }

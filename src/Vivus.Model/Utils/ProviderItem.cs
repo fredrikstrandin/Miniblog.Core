@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vivius.Model.Utils
+namespace Miniblog.Core.Model.Utils
 {
     public class ProviderItem
     {

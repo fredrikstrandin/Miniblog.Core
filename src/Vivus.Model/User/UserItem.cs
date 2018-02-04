@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Vivius.Model.Utils;
+using Miniblog.Core.Model.Utils;
 
-namespace Vivius.Model.User
+namespace Miniblog.Core.Model.User
 {
     public class UserItem
     {

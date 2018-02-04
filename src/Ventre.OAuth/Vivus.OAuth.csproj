@@ -56,7 +56,6 @@
     <ProjectReference Include="..\IdentityServer4.MongoDB\IdentityServer4.MongoDB.csproj" />
     <ProjectReference Include="..\Venter.Service\Venter.Service.csproj" />
     <ProjectReference Include="..\Venter.Utills\Venter.Utills.csproj" />
-    <ProjectReference Include="..\Vivius.Interface\Vivius.Interface.csproj" />
     <ProjectReference Include="..\Vivius.MongoDBUtills\Vivius.MongoDBUtills.csproj" />
     <ProjectReference Include="..\Vivius.Repository\Vivius.Repository.csproj" />
     <ProjectReference Include="..\Vivus.Model\Vivus.Model.csproj" />

@@ -83,7 +83,7 @@ namespace Miniblog.Core.Repository
         {
             return await Task.Run(() =>
             {
-                var post = _cache.FirstOrDefault(p => p.ID.Equals(id, StringComparison.OrdinalIgnoreCase));
+                var post = _cache.FirstOrDefault(p => p.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
                 
                 if (post != null && post.PubDate <= DateTime.UtcNow && (post.Status == Status.Publish || isAdmin))
                 {
@@ -196,7 +196,7 @@ namespace Miniblog.Core.Repository
 
                 Post post = new Post
                 {
-                    ID = Path.GetFileNameWithoutExtension(file),
+                    Id = Path.GetFileNameWithoutExtension(file),
                     Title = ReadValue(doc, "title"),
                     Excerpt = ReadValue(doc, "excerpt"),
                     Content = ReadValue(doc, "content"),
@@ -218,7 +218,7 @@ namespace Miniblog.Core.Repository
 
         private string GetFilePath(Post post)
         {
-            return Path.Combine(_folder, post.ID + ".xml");
+            return Path.Combine(_folder, post.Id + ".xml");
         }
 
 

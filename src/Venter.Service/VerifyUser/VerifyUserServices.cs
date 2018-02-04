@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Venter.Service.Interface;
-using Vivius.Repository.Mail;
-using Vivius.Repository.VerifyUser;
+using Miniblog.Core.Repository.Mail;
+using Miniblog.Core.Repository.VerifyUser;
 
-namespace Vivius.Services.VerifyUser
+namespace Miniblog.Core.Services.VerifyUser
 {
     public class VerifyUserServices : IVerifyUserServices
     {

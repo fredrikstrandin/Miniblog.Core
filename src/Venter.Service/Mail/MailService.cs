@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
-using Vivius.Model.Setting;
-using Vivius.Repository.Mail;
-using Vivius.Repository.VerifyUser;
-using Vivius.Model.Mail;
+using Miniblog.Core.Model.Setting;
+using Miniblog.Core.Repository.Mail;
+using Miniblog.Core.Repository.VerifyUser;
+using Miniblog.Core.Model.Mail;
 using Vivus.Model.Mail;
 
-namespace Vivius.Services.Mail
+namespace Miniblog.Core.Services.Mail
 {
     public class MailService : IMailService
     {

@@ -2,8 +2,8 @@
 using Venter.Service.Interface;
 using Venter.Service.Queue;
 using Venter.Service.UserService;
-using Vivius.Services.Mail;
-using Vivius.Services.VerifyUser;
+using Miniblog.Core.Services.Mail;
+using Miniblog.Core.Services.VerifyUser;
 
 namespace Vivus.Services.DependencyInjection
 {

@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Venter.Service\Venter.Service.csproj" />
     <ProjectReference Include="..\Venter.Utills\Venter.Utills.csproj" />
-    <ProjectReference Include="..\Vivius.Interface\Vivius.Interface.csproj" />
     <ProjectReference Include="..\Vivus.Model\Vivus.Model.csproj" />
   </ItemGroup>
 

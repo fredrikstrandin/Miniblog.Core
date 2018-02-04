@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vivius.Repository.Model
+namespace Miniblog.Core.Repository.Model
 {
     internal class RequestChangeEmailEntity
     {

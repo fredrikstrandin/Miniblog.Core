@@ -23,5 +23,30 @@ namespace Venter.Utilities
 
             return s;
         }
+
+        public static string ToLine(this string[] paragraphs, bool newline = true)
+        {
+            string ret = string.Empty;
+            bool first = true;
+
+            foreach (var item in paragraphs)
+            {
+                if (newline)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        ret += Environment.NewLine;
+                    }
+                }
+
+                ret += item;
+            }
+
+            return ret;
+        }
     }
 }

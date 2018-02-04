@@ -1,6 +1,6 @@
-﻿using Vivius.Model.Utils;
+﻿using Miniblog.Core.Model.Utils;
 
-namespace Vivius.Repository.Model
+namespace Miniblog.Core.Repository.Model
 {
     internal class ProviderSubEntity
     {

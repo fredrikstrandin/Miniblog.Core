@@ -6,13 +6,16 @@ using System.Xml;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Miniblog.Core.Attribute;
 using Miniblog.Core.Models;
 using Miniblog.Core.Services;
 using Venter.Utilities;
+using Vivus.Model;
 using WebEssentials.AspNetCore.Pwa;
 
 namespace Miniblog.Core.Controllers
 {
+    [ServiceFilter(typeof(TenantAttribute))]
     public class BlogController : Controller
     {
         private readonly IBlogService _blog;
@@ -30,11 +33,30 @@ namespace Miniblog.Core.Controllers
         [OutputCache(Profile = "default")]
         public async Task<IActionResult> Index([FromRoute]int page = 0)
         {
-            var posts = await _blog.GetPosts(_settings.Value.PostsPerPage, _settings.Value.PostsPerPage * page);
-            ViewData["Title"] = _manifest.Name;
-            ViewData["Description"] = _manifest.Description;
+            int PostsPerPage = 2;
+            string blogId = null;
+
+            if (RouteData.Values.ContainsKey("tenant") && RouteData.Values["tenant"] is BlogItem)
+            {
+                BlogItem item = RouteData.Values["tenant"] as BlogItem;
+
+                blogId = item.Id;
+                ViewData["Title"] = item.Title;
+                ViewData["Description"] = item.Description;
+                PostsPerPage = item.PostsPerPage;
+            }
+            else
+            {
+                ViewData["Title"] = _manifest.Name;
+                ViewData["Description"] = _manifest.Description;
+                PostsPerPage = _settings.Value.PostsPerPage;
+            }
+
             ViewData["prev"] = $"/{page + 1}/";
             ViewData["next"] = $"/{(page <= 1 ? null : page - 1 + "/")}";
+
+            var posts = await _blog.GetPostsAsync(blogId, PostsPerPage, PostsPerPage * page);
+
             return View("~/Views/Blog/Index.cshtml", posts);
         }
 
@@ -42,7 +64,7 @@ namespace Miniblog.Core.Controllers
         [OutputCache(Profile = "default")]
         public async Task<IActionResult> Category(string category, int page = 0)
         {
-            var posts = (await _blog.GetPostsByCategory(category)).Skip(_settings.Value.PostsPerPage * page).Take(_settings.Value.PostsPerPage);
+            var posts = (await _blog.GetPostsByCategory(category, _settings.Value.PostsPerPage, _settings.Value.PostsPerPage * page));
             ViewData["Title"] = _manifest.Name + " " + category;
             ViewData["Description"] = $"Articles posted in the {category} category";
             ViewData["prev"] = $"/blog/category/{category}/{page + 1}/";
@@ -100,7 +122,7 @@ namespace Miniblog.Core.Controllers
                 return View("Edit", post);
             }
 
-            var existing = await _blog.GetPostById(post.ID) ?? post;
+            var existing = await _blog.GetPostById(post.Id) ?? post;
             string categories = Request.Form["categories"];
 
             existing.Categories = categories.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim().ToLowerInvariant()).ToList();
@@ -113,7 +135,7 @@ namespace Miniblog.Core.Controllers
             existing.Content = await SaveFilesToDiskAsync(existing.Content);
 
             await _blog.SavePost(existing);
-            
+
             return Redirect(post.GetLink());
         }
 
@@ -192,7 +214,7 @@ namespace Miniblog.Core.Controllers
             if (!Request.Form.ContainsKey("website"))
             {
                 post.Comments.Add(comment);
-                await _blog.AddCommentAsync(post.ID, comment);
+                await _blog.AddCommentAsync(post.Id, comment);
             }
 
             return Redirect(post.GetLink() + "#" + comment.Id);

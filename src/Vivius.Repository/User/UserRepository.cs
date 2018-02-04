@@ -9,13 +9,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
-using Vivius.Repository.Model;
-using Vivius.Repository.MongoDBContext;
-using Vivius.Model.User;
-using Vivius.Model.Setting;
-using Vivius.Interface.Repositories;
+using Miniblog.Core.Repository.Model;
+using Miniblog.Core.Repository;
+using Miniblog.Core.Model.User;
+using Miniblog.Core.Model.Setting;
+using Miniblog.Core.Interface.Repositories;
 
-namespace Vivius.Repositories.User
+namespace Miniblog.Core.Repositories.User
 {
     public class UserRepository : IUserRepository
     {

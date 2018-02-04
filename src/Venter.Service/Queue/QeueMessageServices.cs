@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Vivius.Repository.Qeue;
+using Miniblog.Core.Repository.Qeue;
 using Vivus.Model.User;
 
 namespace Venter.Service.Queue

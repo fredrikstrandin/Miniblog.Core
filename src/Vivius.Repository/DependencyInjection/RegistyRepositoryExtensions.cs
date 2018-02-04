@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Vivius.Interface.Repositories;
-using Vivius.Repositories.User;
-using Vivius.Repository.Mail;
-using Vivius.Repository.Qeue;
-using Vivius.Repository.VerifyUser;
+using Miniblog.Core.Interface.Repositories;
+using Miniblog.Core.Repositories.User;
+using Miniblog.Core.Repository.Mail;
+using Miniblog.Core.Repository.Qeue;
+using Miniblog.Core.Repository.VerifyUser;
 
 namespace Vivus.Repository.DependencyInjection
 {

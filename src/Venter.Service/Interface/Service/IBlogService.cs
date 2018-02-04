@@ -9,8 +9,8 @@ namespace Miniblog.Core.Services
 {
     public interface IBlogService
     {
-        Task<IEnumerable<Post>> GetPosts(int count, int skip = 0);
-        Task<IEnumerable<Post>> GetPostsByCategory(string category);
+        Task<IEnumerable<Post>> GetPostsAsync(string blogId, int count, int skip = 0);
+        Task<IEnumerable<Post>> GetPostsByCategory(string category, int count, int skip = 0);
         Task<Post> GetPostBySlug(string slug);
         Task<Post> GetPostById(string id);
         Task<IEnumerable<string>> GetCategoryAsync(string blogId);
@@ -71,7 +71,7 @@ namespace Miniblog.Core.Services
 
         public virtual Task<Post> GetPostById(string id)
         {
-            var post = Cache.FirstOrDefault(p => p.ID.Equals(id, StringComparison.OrdinalIgnoreCase));
+            var post = Cache.FirstOrDefault(p => p.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
             bool isAdmin = IsAdmin();
 
             if (post != null && post.PubDate <= DateTime.UtcNow && (post.Status == Status.Publish || isAdmin))

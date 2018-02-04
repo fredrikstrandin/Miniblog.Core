@@ -24,7 +24,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Venter.Utilities.Exception;
-using Vivius.Model.Setting;
+using Miniblog.Core.Model.Setting;
 using Vivus.Model.Setting;
 using Vivus.Repository.DependencyInjection;
 using Vivus.Services.DependencyInjection;

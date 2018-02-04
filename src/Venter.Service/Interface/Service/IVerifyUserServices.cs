@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 
-namespace Miniblog.Core.Repository.VerifyUser
+namespace Venter.Service.Interface
 {
-    public interface IVerifyUserRepository
+    public interface IVerifyUserServices
     {
         Task<string> CreateCodeAsync(string userId);
-        Task<string> GetUserFromVerifyCodeAsync(string code);
         Task<bool> VerifyCodeAsync(string code, string userId);
+        Task<string> GetUserFromVerifyCodeAsync(string code);
         Task DeleteVerifyCodeAsync(string code);
     }
 }

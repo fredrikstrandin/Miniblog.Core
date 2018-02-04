@@ -1,39 +1,39 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
-using Miniblog.Core.Repository.MongoDB;
-using Miniblog.Core.Repository.MongoDB.Model;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Miniblog.Core.Model.Setting;
+using Miniblog.Core.Repository;
+using Vivus.Model;
 
 namespace Miniblog.Core.Attribute
 {
     public class TenantAttribute : ActionFilterAttribute
     {
-        private readonly MongoDBContext _context;
+        private readonly IBlogRepository _blogRepository;
 
-        public TenantAttribute(IOptions<MongoDbDatabaseSetting> _dbStetting)
+        public TenantAttribute(IBlogRepository blogRepository)
         {
-            _context = new MongoDBContext(_dbStetting.Value);
+            _blogRepository = blogRepository;
         }
 
-        public async override void OnActionExecuting(ActionExecutingContext actionExecutingContext)
+        public override void OnActionExecuting(ActionExecutingContext actionExecutingContext)
         {
             var fullAddress = actionExecutingContext.HttpContext?.Request?
                 .Headers?["Host"].ToString()?.Split('.');
-            if (fullAddress.Length < 2)
-            {
-                actionExecutingContext.Result = new StatusCodeResult(404);
+
+            if (fullAddress.Length < 2 || (fullAddress.Length == 3 && fullAddress[0].ToLower() == "www"))
+            {   
                 base.OnActionExecuting(actionExecutingContext);
             }
             else
             {
                 var subdomain = fullAddress[0];
-                var tenant = await  _context.BlogEntityCollection.Find(x => x.SubDomainNormalize == subdomain)
-                    .FirstOrDefaultAsync();
+                BlogItem tenant = _blogRepository.FindBlogAsync(subdomain.Normalize()).GetAwaiter().GetResult();
 
                 if (tenant != null)
                 {

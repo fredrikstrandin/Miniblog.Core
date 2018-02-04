@@ -19,7 +19,24 @@ namespace Miniblog.Core.Repository.MongoDB.Models
         public string Title { get; set; }
 
         public string Slug { get; set; }
-        public string SlugNormalize { get { return Slug.Normalize(); } set { } }
+        public string SlugNormalize
+        {
+            get
+            {
+                if(Slug == null && Title == null)
+                {
+                    return string.Empty;
+                }
+
+                if (Slug == null)
+                {
+                    Slug = Title;                    
+                }
+
+                return Slug.Normalize();                
+            }
+            set { }
+        }
         public string Excerpt { get; set; }
 
         public string Content { get; set; }
@@ -43,7 +60,7 @@ namespace Miniblog.Core.Repository.MongoDB.Models
 
             Post post = new Post()
             {
-                ID = item.Id.ToString(),
+                Id = item.Id.ToString(),
                 Title = item.Title,
                 Categories = item.Categories,
                 Content = item.Content,
@@ -69,11 +86,13 @@ namespace Miniblog.Core.Repository.MongoDB.Models
             if (item == null)
                 return null;
 
-            ObjectId.TryParse(item.ID, out id);
+            ObjectId.TryParse(item.Id, out id);
+            ObjectId.TryParse(item.BlogId, out ObjectId blogId);
             
             PostEntity post = new PostEntity()
             {
                 Id = id,
+                BlogId = blogId,
                 Title = item.Title,
                 Categories = item.Categories,
                 Content = item.Content,
@@ -83,7 +102,7 @@ namespace Miniblog.Core.Repository.MongoDB.Models
                 PubDate = item.PubDate,
                 Slug = item.Slug
             };
-
+            
             foreach (var comment in item.Comments ?? new List<Comment>())
             {
                 if(post.Comments == null)

@@ -32,20 +32,20 @@ namespace Miniblog.Core.Services
             _contextAccessor = contextAccessor;
         }
 
-        public virtual async Task<IEnumerable<Post>> GetPosts(int count, int skip = 0)
+        public virtual async Task<IEnumerable<Post>> GetPostsAsync(string blogId, int count, int skip = 0)
         {
             bool isAdmin = IsAdmin();
 
-            var posts = await _blogRepository.GetPostsAsync(isAdmin, count, skip);
+            var posts = await _blogRepository.GetPostsAsync(blogId, isAdmin, count, skip);
 
             return posts;
         }
 
-        public virtual Task<IEnumerable<Post>> GetPostsByCategory(string category)
+        public virtual Task<IEnumerable<Post>> GetPostsByCategory(string category, int count, int skip = 0)
         {
             bool isAdmin = IsAdmin();
 
-            var posts = _blogRepository.GetPostsByCategoryAsync(category, isAdmin);
+            var posts = _blogRepository.GetPostsByCategoryAsync(category, isAdmin, count, skip);
 
             return posts;
 

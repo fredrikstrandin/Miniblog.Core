@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Attribute\AdminTenantAttribute.cs" />
+    <Content Include="Attribute\TenantAttribute.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.ImageOptimizer" Version="1.1.0.39" />
     <PackageReference Include="IdentityModel" Version="3.0.0" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.3.0" />
@@ -27,11 +32,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\" />
     <Folder Include="Views\Tenant\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Venter.Service\Venter.Service.csproj" />
     <ProjectReference Include="..\Venter.Utills\Venter.Utills.csproj" />
+    <ProjectReference Include="..\Vivius.Repository\Vivius.Repository.csproj" />
+    <ProjectReference Include="..\Vivus.Model\Vivus.Model.csproj" />
   </ItemGroup>
 
 </Project>

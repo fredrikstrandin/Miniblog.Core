@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Miniblog.Core.Models;
 using Venter.Utilities;
 using WilderMinds.MetaWeblog;
+using Venter.Service.UserService;
 
 namespace Miniblog.Core.Services
 {
@@ -18,10 +19,10 @@ namespace Miniblog.Core.Services
     {
         private readonly IBlogService _blog;
         private readonly IConfiguration _config;
-        private readonly IUserServices _userServices;
+        private readonly IUserService _userServices;
         private readonly IHttpContextAccessor _context;
 
-        public MetaWeblogService(IBlogService blog, IConfiguration config, IHttpContextAccessor context, IUserServices userServices)
+        public MetaWeblogService(IBlogService blog, IConfiguration config, IHttpContextAccessor context, IUserService userServices)
         {
             _blog = blog;
             _config = config;
@@ -120,13 +121,13 @@ namespace Miniblog.Core.Services
             return null;
         }
 
-        public WilderMinds.MetaWeblog.Post[] GetRecentPosts(string blogid, string username, string password, int numberOfPosts)
+        public WilderMinds.MetaWeblog.Post[] GetRecentPosts(string blogId, string username, string password, int numberOfPosts)
         {
             ValidateUserAsync(username, password).GetAwaiter().GetResult();
 
             var sub = _context.HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject)?.Value;
 
-            return _blog.GetPosts(numberOfPosts).GetAwaiter().GetResult().Select(ToMetaWebLogPost).ToArray();
+            return _blog.GetPostsAsync(blogId, numberOfPosts).GetAwaiter().GetResult().Select(ToMetaWebLogPost).ToArray();
         }
 
         public BlogInfo[] GetUsersBlogs(string key, string username, string password)
@@ -224,7 +225,7 @@ namespace Miniblog.Core.Services
 
             return new WilderMinds.MetaWeblog.Post
             {
-                postid = post.ID,
+                postid = post.Id,
                 title = post.Title,
                 wp_slug = post.Slug,
                 permalink = url + post.GetLink(),

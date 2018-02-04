@@ -35,6 +35,7 @@ namespace IdentityServer4.Quickstart.UI
         private readonly AccountService _account;
         private readonly ILogger<AccountController> _logger;
         private readonly IUserService _userService;
+
         public AccountController(
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,

@@ -5,7 +5,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Venter.Service.Interface;
-using Vivius.Model.User;
+using Miniblog.Core.Model.User;
 
 namespace Venter.Service
 {

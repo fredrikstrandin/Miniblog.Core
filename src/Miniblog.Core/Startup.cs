@@ -10,11 +10,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Miniblog.Core.Attribute;
+using Miniblog.Core.Interface.Repositories;
+using Miniblog.Core.Model.Setting;
+using Miniblog.Core.Repositories.User;
 using Miniblog.Core.Repository;
+using Miniblog.Core.Repository.Mail;
 using Miniblog.Core.Repository.MongoDB;
+using Miniblog.Core.Repository.VerifyUser;
 using Miniblog.Core.Services;
+using Miniblog.Core.Services.Mail;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using Venter.Service;
+using Venter.Service.UserService;
+using Vivius.Repository;
 using WebEssentials.AspNetCore.OutputCaching;
 using WebMarkupMin.AspNetCore2;
 using WebMarkupMin.Core;
@@ -84,7 +93,7 @@ namespace Miniblog.Core
                 options.Scope.Add("offline_access");
             });
 
-            services.AddSingleton<IUserServices, BlogUserServices>();
+            //services.AddSingleton<IUserServices, BlogUserServices>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMetaWeblog<MetaWeblogService>();
             services.AddScoped(typeof(TenantAttribute));
@@ -94,7 +103,17 @@ namespace Miniblog.Core
 
             services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IBlogRepository, BlogMongoDBRepository>();
+
             services.AddScoped<IFileRepository, FileDiskRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IMailService, MailService>();
+            services.AddScoped<IMailRepository, MailRepository>();
+
+            services.AddScoped<IVerifyUserRepository, VerifyUserRepository > ();
+            services.AddScoped<ITestDataService, TestDataService>();
+            services.AddScoped<ITestDataRepository, TestDataRepository>();
 
             // Progressive Web Apps https://github.com/madskristensen/WebEssentials.AspNetCore.ServiceWorker
             services.AddProgressiveWebApp(new WebEssentials.AspNetCore.Pwa.PwaOptions
@@ -110,16 +129,7 @@ namespace Miniblog.Core
                     Duration = 3600
                 };
             });
-
-            //// Cookie authentication.
-            //services
-            //    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //    .AddCookie(options =>
-            //    {
-            //        options.LoginPath = "/login/";
-            //        options.LogoutPath = "/logout/";
-            //    });
-
+            
             // HTML minification (https://github.com/Taritsyn/WebMarkupMin)
             services
                 .AddWebMarkupMin(options =>

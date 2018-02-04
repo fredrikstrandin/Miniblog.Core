@@ -1,15 +1,15 @@
 ﻿using IdentityModel;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Logging;
-using Vivius.Interface.Repositories;
+using Miniblog.Core.Interface.Repositories;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Vivius.Model.User;
-using Vivius.Services.Mail;
+using Miniblog.Core.Model.User;
+using Miniblog.Core.Services.Mail;
 using Vivus.Model.Mail;
 
 namespace Venter.Service.UserService

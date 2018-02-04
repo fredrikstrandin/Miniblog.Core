@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Vivus.Model.Setting;
 using Vivus.Model.User;
 
-namespace Vivius.Repository.Qeue
+namespace Miniblog.Core.Repository.Qeue
 {
     public class AzureQeueMessageRepository : IQeueMessageRepository
     {

@@ -1,24 +1,24 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Vivius.Repository.MongoDBContext;
-using Vivius.Repositories.User;
+using Miniblog.Core.Repository;
+using Miniblog.Core.Repositories.User;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Vivius.Model.Setting;
+using Miniblog.Core.Model.Setting;
 using Microsoft.Extensions.Options;
-using Vivius.Repository.Model;
+using Miniblog.Core.Repository.Model;
 
-namespace Vivius.Repository.VerifyUser
+namespace Miniblog.Core.Repository.VerifyUser
 {
     public class VerifyUserRepository : IVerifyUserRepository
     {
-        private readonly MongoDBContext.MongoDBContext _context;
+        private readonly MongoDBContext _context;
 
         public VerifyUserRepository(IOptions<MongoDbDatabaseSetting> dbStetting)
         {
-            _context = new MongoDBContext.MongoDBContext(dbStetting.Value);
+            _context = new MongoDBContext(dbStetting.Value);
         }
 
         public async Task<string> CreateCodeAsync(string userId)

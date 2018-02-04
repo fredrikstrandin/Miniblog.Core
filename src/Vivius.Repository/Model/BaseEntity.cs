@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vivius.Repository.Model
+namespace Miniblog.Core.Repository.Model
 {
     [BsonIgnoreExtraElements]
     internal class BaseEntity
