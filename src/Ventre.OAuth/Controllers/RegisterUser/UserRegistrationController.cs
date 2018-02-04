@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using IdentityModel;
 using Venter.Service.Queue;
 using Vivus.Model.User;
+using Microsoft.Extensions.Options;
+using Vivus.Model.Setting;
 
 namespace Vivus.OAuth.Controllers
 {
@@ -20,14 +22,17 @@ namespace Vivus.OAuth.Controllers
         private readonly IUserMongoDBService _oauthUserServices;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IQeueMessageServices _qeueMessageServices;
+        private readonly ApplicationSetting _applicationSetting;
 
         public AccountRegistrationController(IUserMongoDBService oauthUserServices,
              IIdentityServerInteractionService interaction,
-             IQeueMessageServices qeueMessageServices)
+             IQeueMessageServices qeueMessageServices,
+             IOptions<ApplicationSetting> applicationSetting)
         {
             _oauthUserServices = oauthUserServices;
             _interaction = interaction;
             _qeueMessageServices = qeueMessageServices;
+            _applicationSetting = applicationSetting.Value;
         }
 
         [HttpGet("index")]
@@ -95,37 +100,37 @@ namespace Vivus.OAuth.Controllers
 
                 userToCreate.Claims = new List<Claim>()
                 {
-                    new Claim("subscriptionlevel", "FreeUser")
+                    new Claim("subscriptionlevel", "FreeUser", ClaimValueTypes.String, _applicationSetting.Issuer)
                 };
 
                 if (!string.IsNullOrEmpty(model.Country))
                 {
-                    userToCreate.Claims.Add(new Claim("country", model.Country));
+                    userToCreate.Claims.Add(new Claim("country", model.Country, ClaimValueTypes.String, _applicationSetting.Issuer));
                 }
 
                 if (!string.IsNullOrEmpty(model.Firstname))
                 {
-                    userToCreate.Claims.Add(new Claim("given_name", model.Firstname));
+                    userToCreate.Claims.Add(new Claim("given_name", model.Firstname, ClaimValueTypes.String, _applicationSetting.Issuer));
                 }
 
                 if (!string.IsNullOrEmpty(model.Lastname))
                 {
-                    userToCreate.Claims.Add(new Claim("family_name", model.Lastname));
+                    userToCreate.Claims.Add(new Claim("family_name", model.Lastname, ClaimValueTypes.String, _applicationSetting.Issuer));
                 }
 
                 if (!string.IsNullOrEmpty(model.Username))
                 {
-                    userToCreate.Claims.Add(new Claim("nickname", model.Username));
+                    userToCreate.Claims.Add(new Claim("nickname", model.Username, ClaimValueTypes.String, _applicationSetting.Issuer));
                 }
 
                 if (!string.IsNullOrEmpty(model.Email))
                 {
-                    userToCreate.Claims.Add(new Claim("email", model.Email));
+                    userToCreate.Claims.Add(new Claim("email", model.Email, ClaimValueTypes.Email, _applicationSetting.Issuer));
                 }
 
                 if (!string.IsNullOrEmpty(model.ProfileImage))
                 {
-                    userToCreate.Claims.Add(new Claim("picture", model.ProfileImage));
+                    userToCreate.Claims.Add(new Claim("picture", model.ProfileImage, ClaimValueTypes.String, _applicationSetting.Issue));
                 }
 
                 // if we're provisioning a user via external login, we must add the provider &
@@ -174,6 +179,7 @@ namespace Vivus.OAuth.Controllers
                     // log the user in
                     await HttpContext.SignInAsync(userToCreate.Id, userToCreate.Claims.ToArray());
                 }
+
 
                 await _qeueMessageServices.SendCreateUser(userToCreate);
 

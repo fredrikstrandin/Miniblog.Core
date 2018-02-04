@@ -84,6 +84,7 @@ namespace Host
             //}
             );
 
+            services.Configure<ApplicationSetting>(Configuration.GetSection("ApplicationSetting"));
             services.Configure<MongoDbDatabaseSetting>(Configuration.GetSection("MongoDBDatabaseSetting"));
             services.Configure<APIKeySetting>(Configuration.GetSection("APIKeySetting"));
             services.Configure<MailSetting>(Configuration.GetSection("MailSetting"));
