@@ -31,27 +31,13 @@ namespace Venter.Service.UserService
             _mailService = mailService;
         }
 
-        public async Task<string> CreateAsync(UserItem user, bool sendEmail = true)
+        public async Task<string> CreateAsync(UserItem user)
         {
             if (user == null)
                 throw new ArgumentNullException("User argument cant be null");
                         
             string userId = await _userRepository.CreateAsync(user);
-
-            if (userId != null)
-            {
-                if (sendEmail)
-                {
-                    await _mailService.SendVerifyMail(new VerifyItem()
-                    {
-                        Email = user.Email,
-                        UserId = userId,
-                        FirstName = user.FirstName,
-                        FullName = $"{user?.FirstName ?? ""} {user?.LastName ?? ""}"
-                    });
-                }
-            }
-
+            
             return userId;
         }
          

@@ -13,6 +13,8 @@ using Venter.Service.Queue;
 using Vivus.Model.User;
 using Microsoft.Extensions.Options;
 using Vivus.Model.Setting;
+using Venter.Service.UserService;
+using Miniblog.Core.Model.User;
 
 namespace Vivus.OAuth.Controllers
 {
@@ -23,16 +25,19 @@ namespace Vivus.OAuth.Controllers
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IQeueMessageServices _qeueMessageServices;
         private readonly ApplicationSetting _applicationSetting;
+        private readonly IUserService _userService;
 
         public AccountRegistrationController(IUserMongoDBService oauthUserServices,
              IIdentityServerInteractionService interaction,
              IQeueMessageServices qeueMessageServices,
-             IOptions<ApplicationSetting> applicationSetting)
+             IOptions<ApplicationSetting> applicationSetting,
+             IUserService userService)
         {
             _oauthUserServices = oauthUserServices;
             _interaction = interaction;
             _qeueMessageServices = qeueMessageServices;
             _applicationSetting = applicationSetting.Value;
+            _userService = userService;
         }
 
         [HttpGet("index")]
@@ -173,6 +178,17 @@ namespace Vivus.OAuth.Controllers
                 {
                     throw new Exception($"Creating a user failed.");
                 }
+
+                await _userService.CreateAsync(new UserItem()
+                {
+                    Id = userToCreate.Id,
+                    Email = model.Email,
+                    Country = model.Country,
+                    EmailVerified = model.IsProvisioningFromExternal,
+                    FirstName = model.Firstname,
+                    LastName = model.Lastname,
+                    ProfileImageUrl = model.ProfileImage
+                });
 
                 if (!model.IsProvisioningFromExternal)
                 {

@@ -9,7 +9,7 @@ namespace Venter.Service.UserService
         Task<string[]> CheckEmailChangeAsync(string code);
         Task<bool> CheckIfExistAsync(string email);
         Task<bool> CommitEmailChange(string NewEmail, string OldEmail);
-        Task<string> CreateAsync(UserItem user, bool sendEmail = true);
+        Task<string> CreateAsync(UserItem user);
         Task<bool> DeleteAccountAsync(string userId);
         Task<UserEmailItem> FindByExternalProviderAsync(string provider, string userId);
         Task<string> GetIdByEmailAsync(string id);
