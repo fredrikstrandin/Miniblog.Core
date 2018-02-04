@@ -130,7 +130,7 @@ namespace Vivus.OAuth.Controllers
 
                 if (!string.IsNullOrEmpty(model.ProfileImage))
                 {
-                    userToCreate.Claims.Add(new Claim("picture", model.ProfileImage, ClaimValueTypes.String, _applicationSetting.Issue));
+                    userToCreate.Claims.Add(new Claim("picture", model.ProfileImage, ClaimValueTypes.String, _applicationSetting.Issuer));
                 }
 
                 // if we're provisioning a user via external login, we must add the provider &
