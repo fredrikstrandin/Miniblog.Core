@@ -17,5 +17,6 @@ namespace Venter.Service.UserService
         Task RequestEmailChangeAsync(string newEmail, string oldEmail, string code);
         Task<bool> SetVerifyEmailAsync(string userId);
         Task UpdateLastLogin(string id);
+        Task<bool> IfUserOwensBlogAsync(string sub, string blogId);
     }
 }

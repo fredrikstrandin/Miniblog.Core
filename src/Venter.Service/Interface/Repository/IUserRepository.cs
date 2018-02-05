@@ -17,5 +17,6 @@ namespace Miniblog.Core.Interface.Repositories
         Task RequestEmailChangeAsync(string newEmail, string oldEmail, string code);
         Task<bool> SetVerifyEmailAsync(string userId);
         Task UpdateLastLoginAsync(string userId);
+        Task<bool> IfUserOwensBlogAsync(string sub, string blogId);
     }
 }

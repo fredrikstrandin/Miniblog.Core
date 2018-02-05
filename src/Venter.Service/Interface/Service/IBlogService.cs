@@ -10,9 +10,9 @@ namespace Miniblog.Core.Services
     public interface IBlogService
     {
         Task<IEnumerable<Post>> GetPostsAsync(string blogId, int count, int skip = 0);
-        Task<IEnumerable<Post>> GetPostsByCategory(string category, int count, int skip = 0);
-        Task<Post> GetPostBySlug(string slug);
-        Task<Post> GetPostById(string id);
+        Task<IEnumerable<Post>> GetPostsByCategory(string blogId, string category, int count, int skip = 0);
+        Task<Post> GetPostBySlug(string blogId, string slug);
+        Task<Post> GetPostById(string blogId, string id);
         Task<IEnumerable<string>> GetCategoryAsync(string blogId);
         Task<string> SavePost(Post post);
         Task DeletePost(Post post);

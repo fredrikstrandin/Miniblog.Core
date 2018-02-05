@@ -309,7 +309,24 @@ namespace Miniblog.Core.Repositories.User
             var update = Builders<UserEntity>.Update.Set(x => x.LastLoginTime, DateTime.UtcNow);
 
             var ret = await _context.UserEntityCollection.UpdateOneAsync(filter, update);
+        }
 
+        public async Task<bool> IfUserOwensBlogAsync(string sub, string blogId)
+        {
+            ObjectId blogid = ObjectId.Empty;
+
+            if (!ObjectId.TryParse(sub, out ObjectId id) && !ObjectId.TryParse(blogId, out blogid))
+            {
+                return false;
+            }
+
+            var filter = Builders<UserEntity>.Filter.Where(x => x.Id == id && x.BlogOwnerList.Contains(blogid));
+            
+            var ret = await _context.UserEntityCollection.Find(filter)
+                .Project(x => x.Id)
+                .FirstOrDefaultAsync();
+
+            return ret != null;
         }
     }
 }

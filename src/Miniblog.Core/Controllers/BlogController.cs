@@ -64,7 +64,7 @@ namespace Miniblog.Core.Controllers
         [OutputCache(Profile = "default")]
         public async Task<IActionResult> Category(string category, int page = 0)
         {
-            var posts = (await _blog.GetPostsByCategory(category, _settings.Value.PostsPerPage, _settings.Value.PostsPerPage * page));
+            var posts = (await _blog.GetPostsByCategory(null, category, _settings.Value.PostsPerPage, _settings.Value.PostsPerPage * page));
             ViewData["Title"] = _manifest.Name + " " + category;
             ViewData["Description"] = $"Articles posted in the {category} category";
             ViewData["prev"] = $"/blog/category/{category}/{page + 1}/";
@@ -84,7 +84,7 @@ namespace Miniblog.Core.Controllers
         [OutputCache(Profile = "default")]
         public async Task<IActionResult> Post(string slug)
         {
-            var post = await _blog.GetPostBySlug(slug);
+            var post = await _blog.GetPostBySlug(null, slug);
 
             if (post != null)
             {
@@ -103,7 +103,7 @@ namespace Miniblog.Core.Controllers
                 return View(new Post());
             }
 
-            var post = await _blog.GetPostById(id);
+            var post = await _blog.GetPostById(null, id);
 
             if (post != null)
             {
@@ -122,7 +122,7 @@ namespace Miniblog.Core.Controllers
                 return View("Edit", post);
             }
 
-            var existing = await _blog.GetPostById(post.Id) ?? post;
+            var existing = await _blog.GetPostById(null, post.Id) ?? post;
             string categories = Request.Form["categories"];
 
             existing.Categories = categories.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim().ToLowerInvariant()).ToList();
@@ -177,7 +177,7 @@ namespace Miniblog.Core.Controllers
         [HttpPost, Authorize, AutoValidateAntiforgeryToken]
         public async Task<IActionResult> DeletePost(string id)
         {
-            var existing = await _blog.GetPostById(id);
+            var existing = await _blog.GetPostById(null, id);
 
             if (existing != null)
             {
@@ -192,7 +192,7 @@ namespace Miniblog.Core.Controllers
         [HttpPost]
         public async Task<IActionResult> AddComment(string postId, Comment comment)
         {
-            var post = await _blog.GetPostById(postId);
+            var post = await _blog.GetPostById(null, postId);
 
             if (!ModelState.IsValid)
             {
@@ -224,7 +224,7 @@ namespace Miniblog.Core.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteComment(string postId, string commentId)
         {
-            var post = await _blog.GetPostById(postId);
+            var post = await _blog.GetPostById(null, postId);
 
             if (post == null)
             {

@@ -55,7 +55,7 @@ namespace Miniblog.Core.Services
         {
             ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
 
-            var post = _blog.GetPostById(postid).GetAwaiter().GetResult();
+            var post = _blog.GetPostById(null, postid).GetAwaiter().GetResult();
 
             if (post != null)
             {
@@ -70,7 +70,7 @@ namespace Miniblog.Core.Services
         {
             ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
 
-            var existing = _blog.GetPostById(postid).GetAwaiter().GetResult();
+            var existing = _blog.GetPostById(null, postid).GetAwaiter().GetResult();
 
             if (existing != null)
             {
@@ -111,7 +111,7 @@ namespace Miniblog.Core.Services
         {
             ValidateUserAsync(username, password).GetAwaiter().GetResult(); 
             
-            var post = _blog.GetPostById(postid).GetAwaiter().GetResult();
+            var post = _blog.GetPostById(null, postid).GetAwaiter().GetResult();
 
             if (post != null)
             {

@@ -90,5 +90,10 @@ namespace Venter.Service.UserService
         {
             await _userRepository.UpdateLastLoginAsync(userId);
         }
+
+        public async Task<bool> IfUserOwensBlogAsync(string sub, string blogId)
+        {
+            return await _userRepository.IfUserOwensBlogAsync(sub, blogId);
+        }
     }
 }

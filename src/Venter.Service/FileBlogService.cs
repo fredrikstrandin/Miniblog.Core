@@ -7,11 +7,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using IdentityModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Miniblog.Core.Models;
 using Miniblog.Core.Repository;
+using Venter.Service.UserService;
+using Vivus.Model;
 
 namespace Miniblog.Core.Services
 {
@@ -20,80 +24,83 @@ namespace Miniblog.Core.Services
         private readonly IBlogRepository _blogRepository;
         private readonly IFileRepository _file;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IUserService _userService;
 
         public BlogService(IHostingEnvironment env,
             IHttpContextAccessor contextAccessor,
             IBlogRepository blogRepository,
             IFileRepository file,
-            ILogger<BlogService> logger)
+            ILogger<BlogService> logger,
+            IUserService userService)
         {
             _blogRepository = blogRepository;
             _file = file;
             _contextAccessor = contextAccessor;
+            _userService = userService;
         }
 
         public virtual async Task<IEnumerable<Post>> GetPostsAsync(string blogId, int count, int skip = 0)
         {
-            bool isAdmin = IsAdmin();
+            bool isAdmin = await IsAdmin(blogId);
 
             var posts = await _blogRepository.GetPostsAsync(blogId, isAdmin, count, skip);
 
             return posts;
         }
 
-        public virtual Task<IEnumerable<Post>> GetPostsByCategory(string category, int count, int skip = 0)
+        public virtual async Task<IEnumerable<Post>> GetPostsByCategory(string blogId, string category, int count, int skip = 0)
         {
-            bool isAdmin = IsAdmin();
+            bool isAdmin = await IsAdmin(blogId);
 
-            var posts = _blogRepository.GetPostsByCategoryAsync(category, isAdmin, count, skip);
-
-            return posts;
-
+            return await _blogRepository.GetPostsByCategoryAsync(category, isAdmin, count, skip);
         }
 
-        public virtual Task<Post> GetPostBySlug(string slug)
+        public virtual async Task<Post> GetPostBySlug(string blogId, string slug)
         {
-            bool isAdmin = IsAdmin();
+            bool isAdmin = await IsAdmin(blogId);
 
-            var post = _blogRepository.GetPostBySlugAsync(slug, isAdmin);
-
-            return post;
+            return await _blogRepository.GetPostBySlugAsync(slug, isAdmin);            
         }
 
-        public async virtual Task<Post> GetPostById(string id)
+        public async virtual Task<Post> GetPostById(string blogId, string id)
         {
-            bool isAdmin = IsAdmin();
+            bool isAdmin = await IsAdmin(blogId);
 
-            Post post = await _blogRepository.GetPostByIdAsync(id, isAdmin);
-
-            return post;
+            return await _blogRepository.GetPostByIdAsync(id, isAdmin);
         }
 
         public async virtual Task<IEnumerable<string>> GetCategoryAsync(string blogId)
         {
             IEnumerable<string> categories = await _blogRepository.GetCategoryAsync(blogId);
-                        
+
             return categories;
         }
 
         public async Task<string> SavePost(Post post)
         {
-            return await _blogRepository.SavePostAsync(post);            
+            return await _blogRepository.SavePostAsync(post);
         }
 
         public async Task DeletePost(Post post)
         {
-            await _blogRepository.DeletePostAsync(post);            
+            await _blogRepository.DeletePostAsync(post);
         }
 
         public async Task<string> SaveFile(byte[] bytes, string fileName, string suffix = null)
         {
-            return await _file.SaveFileAsync(bytes, fileName, suffix);            
+            return await _file.SaveFileAsync(bytes, fileName, suffix);
         }
 
-        protected bool IsAdmin()
+        protected async Task<bool> IsAdmin(string blogId)
         {
-            return _contextAccessor.HttpContext?.User?.Identity.IsAuthenticated == true;
+            string sub = _contextAccessor?.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject)?.Value;
+
+            if (string.IsNullOrEmpty(sub))
+            {
+                return false;
+            }
+
+            return await _userService.IfUserOwensBlogAsync(sub, blogId);
         }
 
         public async Task AddCommentAsync(string id, Comment comment)
