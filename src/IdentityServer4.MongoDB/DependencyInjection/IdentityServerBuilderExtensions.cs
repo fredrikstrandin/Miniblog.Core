@@ -3,6 +3,7 @@
 
 
 //using IdentityServer4.Configuration.DependencyInjection;
+using IdentityServer4.MongoDB.Generator;
 using IdentityServer4.MongoDB.Model.Setting;
 using IdentityServer4.MongoDB.MonogDBContext;
 using IdentityServer4.MongoDB.Repository;
@@ -10,7 +11,9 @@ using IdentityServer4.MongoDB.Serializer;
 using IdentityServer4.MongoDB.Service;
 using IdentityServer4.MongoDB.Store;
 using IdentityServer4.MongoDB.Validator;
+using IdentityServer4.ResponseHandling;
 using IdentityServer4.Stores;
+using IdentityServer4.Validation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
@@ -30,7 +33,7 @@ namespace IdentityServer4.MongoDB.DependencyInjection
             builder.Services.AddScoped<IPersistedGrantStore, MongoDBPersistedGrantStore>();
             builder.Services.AddScoped<IMongoIdentityContext, MongoIdentityContext>();
             builder.Services.AddScoped<IPasswordService, PasswordService>();
-
+                        
             BsonSerializer.RegisterSerializationProvider(new ClaimProvider());
             
             builder.Services.AddSingleton<UserMongoDBService>();

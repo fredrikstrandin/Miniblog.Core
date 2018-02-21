@@ -4,6 +4,7 @@
 
 using IdentityServer4;
 using IdentityServer4.Models;
+using IdentityServer4.MongoDB.Model;
 using System.Collections.Generic;
 
 namespace Host.Configuration
@@ -15,7 +16,7 @@ namespace Host.Configuration
             return new List<Client>
             {
                 // OpenID Connect hybrid flow and client credentials client (MVC)
-                new Client
+                new TenantClient
                 {
                     ClientId = "MultiBlog",
                     ClientName = "MultiBlog.Core",
@@ -28,7 +29,8 @@ namespace Host.Configuration
 
                     RedirectUris = { "http://localhost:5001/signin-oidc" },
                     PostLogoutRedirectUris = { "http://localhost:5001/signout-callback-oidc" },
-
+                    Tenant = true,
+                    RequireConsent = false,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,

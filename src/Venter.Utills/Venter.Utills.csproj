@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Filter\" />
+    <Folder Include="IdentityServer\" />
   </ItemGroup>
 
   <ItemGroup>

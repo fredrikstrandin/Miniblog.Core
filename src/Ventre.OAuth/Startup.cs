@@ -10,6 +10,8 @@ using IdentityServer4.MongoDB.Model.Setting;
 using IdentityServer4.MongoDB.Service;
 using IdentityServer4.Services;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Miniblog.Core.Model.Setting;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,8 +27,8 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Venter.Utilities.Exception;
-using Miniblog.Core.Model.Setting;
 using Vivus.Model.Setting;
+using Vivus.OAuth.IdentityServer;
 using Vivus.Repository.DependencyInjection;
 using Vivus.Services.DependencyInjection;
 
@@ -122,10 +125,9 @@ namespace Host
                 {
                     options.Events.RaiseSuccessEvents = true;
                     options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseErrorEvents = true;    
                 })
                 .AddInMemoryClients(Clients.Get())
-                //.AddInMemoryClients(_config.GetSection("Clients"))
                 .AddInMemoryIdentityResources(Resources.GetIdentityResources())
                 .AddInMemoryApiResources(Resources.GetApiResources())
                 //.AddSigningCredential(cert)
@@ -134,8 +136,9 @@ namespace Host
                 .AddExtensionGrantValidator<Extensions.NoSubjectExtensionGrantValidator>()
                 .AddJwtBearerClientAuthentication()
                 .AddAppAuthRedirectUriValidator()
-                .AddMongoDBUsers(Configuration);
-
+                .AddMongoDBUsers(Configuration)
+                .AddTenant();
+            
             services.AddOidcStateDataFormatterCache("aad", "demoidsrv");
 
             services.AddAuthentication()
@@ -207,7 +210,7 @@ namespace Host
                     return Task.CompletedTask;
                 });
             });
-
+            
             app.UseIdentityServer();
 
             app.UseStaticFiles();
