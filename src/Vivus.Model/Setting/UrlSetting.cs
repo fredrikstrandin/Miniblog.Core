@@ -8,6 +8,7 @@ namespace Miniblog.Core.Model.Setting
     {
         public string OAuthServerUrl { get; set; }
         public string APIServerUrl { get; set; }
-        public string ClientUrl { get; set; }        
+        public string ClientUrl { get; set; }      
+        public int DotCountMin { get; set;  }
     }
 }
