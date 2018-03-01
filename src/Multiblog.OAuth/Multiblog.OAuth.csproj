@@ -54,10 +54,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityServer4.MongoDB\IdentityServer4.MongoDB.csproj" />
-    <ProjectReference Include="..\Venter.Service\Multiblog.Service.csproj" />
-    <ProjectReference Include="..\Venter.Utills\Multiblog.Utills.csproj" />
-    <ProjectReference Include="..\Vivius.MongoDBUtills\Multiblog.MongoDBUtills.csproj" />
-    <ProjectReference Include="..\Vivius.Repository\Multiblog.Repository.csproj" />
-    <ProjectReference Include="..\Vivus.Model\Multiblog.Model.csproj" />
+    <ProjectReference Include="..\Multiblog.Model\Multiblog.Model.csproj" />
+    <ProjectReference Include="..\Multiblog.Repository\Multiblog.Repository.csproj" />
+    <ProjectReference Include="..\Multiblog.Service\Multiblog.Service.csproj" />
   </ItemGroup>
 </Project>
