@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Miniblog.Core.Model.Mail
+namespace Multiblog.Core.Model.Mail
 {
     public class EmailAdress
     {

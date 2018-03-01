@@ -1,11 +1,11 @@
-﻿using Miniblog.Core.Models;
+﻿using Multiblog.Core.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Miniblog.Core.Repository.MongoDB.Models
+namespace Multiblog.Core.Repository.MongoDB.Models
 {
     public class CommentSubEntity
     {

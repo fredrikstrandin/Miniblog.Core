@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Venter.Utilities.Converter
+namespace Multiblog.Utilities.Converter
 {
     public class OnlyDateConverter : IsoDateTimeConverter
     {

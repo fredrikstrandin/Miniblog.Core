@@ -1,4 +1,4 @@
-﻿namespace Miniblog.Core
+﻿namespace Multiblog.Core
 {
     public class BlogSettings
     {

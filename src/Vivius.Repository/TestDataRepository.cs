@@ -1,15 +1,15 @@
 ﻿using Microsoft.Extensions.Options;
-using Miniblog.Core.Model.Setting;
-using Miniblog.Core.Models;
-using Miniblog.Core.Repository;
-using Miniblog.Core.Repository.MongoDB.Model;
-using Miniblog.Core.Repository.MongoDB.Models;
+using Multiblog.Core.Model.Setting;
+using Multiblog.Core.Models;
+using Multiblog.Core.Repository;
+using Multiblog.Core.Repository.MongoDB.Model;
+using Multiblog.Core.Repository.MongoDB.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Vivus.Model;
+using Multiblog.Model;
 
 namespace Vivius.Repository
 {

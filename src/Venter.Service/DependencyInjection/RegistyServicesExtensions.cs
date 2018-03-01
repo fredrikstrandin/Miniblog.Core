@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Venter.Service.Interface;
-using Venter.Service.Queue;
-using Venter.Service.UserService;
-using Miniblog.Core.Services.Mail;
-using Miniblog.Core.Services.VerifyUser;
+using Multiblog.Service.Interface;
+using Multiblog.Service.Queue;
+using Multiblog.Service.UserService;
+using Multiblog.Core.Services.Mail;
+using Multiblog.Core.Services.VerifyUser;
 
-namespace Vivus.Services.DependencyInjection
+namespace Multiblog.Services.DependencyInjection
 {
     public static class RegistyServicesExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace Miniblog.Core.Models
+﻿namespace Multiblog.Core.Models
 {
     public enum Status
     {

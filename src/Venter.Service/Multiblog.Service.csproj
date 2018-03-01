@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityServer4.MongoDB\IdentityServer4.MongoDB.csproj" />
-    <ProjectReference Include="..\Vivus.Model\Vivus.Model.csproj" />
+    <ProjectReference Include="..\Vivus.Model\Multiblog.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>

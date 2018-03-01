@@ -12,12 +12,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using Miniblog.Core.Models;
-using Miniblog.Core.Repository;
-using Venter.Service.UserService;
-using Vivus.Model;
+using Multiblog.Core.Models;
+using Multiblog.Core.Repository;
+using Multiblog.Service.UserService;
+using Multiblog.Model;
 
-namespace Miniblog.Core.Services
+namespace Multiblog.Core.Services
 {
     public class BlogService : IBlogService
     {

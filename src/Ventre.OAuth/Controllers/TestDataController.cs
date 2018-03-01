@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Venter.Service;
+using Multiblog.Service;
 
-namespace Miniblog.Core.Controllers
+namespace Multiblog.Core.Controllers
 {
     public class TestDataController : Controller
     {

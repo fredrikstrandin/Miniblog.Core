@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Miniblog.Core.Model.Mail;
+using Multiblog.Core.Model.Mail;
 
-namespace Miniblog.Core.Repository.Mail
+namespace Multiblog.Core.Repository.Mail
 {
     public interface IMailRepository
     {

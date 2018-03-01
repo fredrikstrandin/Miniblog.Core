@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Vivus.Model.User;
+using Multiblog.Model.User;
 
-namespace Venter.Service.Queue
+namespace Multiblog.Service.Queue
 {
     public interface IQeueMessageServices
     {

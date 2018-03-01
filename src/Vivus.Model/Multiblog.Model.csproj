@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Venter.Utills\Venter.Utills.csproj" />
+    <ProjectReference Include="..\Venter.Utills\Multiblog.Utills.csproj" />
   </ItemGroup>
 
 </Project>

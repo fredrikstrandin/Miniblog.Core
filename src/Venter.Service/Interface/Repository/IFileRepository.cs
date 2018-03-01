@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Miniblog.Core.Repository
+namespace Multiblog.Core.Repository
 {
     public interface IFileRepository
     {

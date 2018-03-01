@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Venter.Utilities.Middleware.RequestLogging
+namespace Multiblog.Utilities.Middleware.RequestLogging
 {
     public class RequestSave : IRequestSave
     {

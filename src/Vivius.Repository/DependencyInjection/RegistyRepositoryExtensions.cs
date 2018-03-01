@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Miniblog.Core.Interface.Repositories;
-using Miniblog.Core.Repositories.User;
-using Miniblog.Core.Repository.Mail;
-using Miniblog.Core.Repository.Qeue;
-using Miniblog.Core.Repository.VerifyUser;
+using Multiblog.Core.Interface.Repositories;
+using Multiblog.Core.Repositories.User;
+using Multiblog.Core.Repository.Mail;
+using Multiblog.Core.Repository.Qeue;
+using Multiblog.Core.Repository.VerifyUser;
 
-namespace Vivus.Repository.DependencyInjection
+namespace Multiblog.Repository.DependencyInjection
 {
     public static class RegistyRepositoryExtensions
     {

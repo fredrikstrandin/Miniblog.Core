@@ -1,20 +1,20 @@
-﻿using Miniblog.Core.Repository;
+﻿using Multiblog.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Vivus.Model;
+using Multiblog.Model;
 using NLipsum.Core;
-using Venter.Utilities;
-using Miniblog.Core.Models;
+using Multiblog.Utilities;
+using Multiblog.Core.Models;
 using System.Linq;
-using Venter.Utills.Extentions;
+using Multiblog.Utills.Extentions;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using Venter.Service.UserService;
+using Multiblog.Service.UserService;
 using IdentityServer4.MongoDB.Service;
 
-namespace Venter.Service
+namespace Multiblog.Service
 {
     public class TestDataService : ITestDataService
     {

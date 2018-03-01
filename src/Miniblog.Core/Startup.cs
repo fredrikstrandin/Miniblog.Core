@@ -9,20 +9,20 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Miniblog.Core.Attribute;
-using Miniblog.Core.Interface.Repositories;
-using Miniblog.Core.Model.Setting;
-using Miniblog.Core.Repositories.User;
-using Miniblog.Core.Repository;
-using Miniblog.Core.Repository.Mail;
-using Miniblog.Core.Repository.MongoDB;
-using Miniblog.Core.Repository.VerifyUser;
-using Miniblog.Core.Services;
-using Miniblog.Core.Services.Mail;
+using Multiblog.Core.Attribute;
+using Multiblog.Core.Interface.Repositories;
+using Multiblog.Core.Model.Setting;
+using Multiblog.Core.Repositories.User;
+using Multiblog.Core.Repository;
+using Multiblog.Core.Repository.Mail;
+using Multiblog.Core.Repository.MongoDB;
+using Multiblog.Core.Repository.VerifyUser;
+using Multiblog.Core.Services;
+using Multiblog.Core.Services.Mail;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using Venter.Service;
-using Venter.Service.UserService;
+using Multiblog.Service;
+using Multiblog.Service.UserService;
 using Vivius.Repository;
 using WebEssentials.AspNetCore.OutputCaching;
 using WebMarkupMin.AspNetCore2;
@@ -30,10 +30,10 @@ using WebMarkupMin.Core;
 using WilderMinds.MetaWeblog;
 
 using IWmmLogger = WebMarkupMin.Core.Loggers.ILogger;
-using MetaWeblogService = Miniblog.Core.Services.MetaWeblogService;
+using MetaWeblogService = Multiblog.Core.Services.MetaWeblogService;
 using WmmNullLogger = WebMarkupMin.Core.Loggers.NullLogger;
 
-namespace Miniblog.Core
+namespace Multiblog.Core
 {
     public class Startup
     {

@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using Miniblog.Core.Model.User;
+using Multiblog.Core.Model.User;
 
-namespace Miniblog.Core.Interface.Repositories
+namespace Multiblog.Core.Interface.Repositories
 {
     public interface IUserRepository
     {

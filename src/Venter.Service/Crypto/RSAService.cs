@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Venter.Service.Crypto
+namespace Multiblog.Service.Crypto
 {
     class RSAService
     {

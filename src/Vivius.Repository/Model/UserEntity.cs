@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Venter.Utilities.Converter;
-using Miniblog.Core.Model.User;
-using Miniblog.Core.Model.Utils;
+using Multiblog.Utilities.Converter;
+using Multiblog.Core.Model.User;
+using Multiblog.Core.Model.Utils;
 
-namespace Miniblog.Core.Repository.Model
+namespace Multiblog.Core.Repository.Model
 {
     [BsonIgnoreExtraElements]
     internal class UserEntity : BaseEntity

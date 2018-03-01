@@ -6,7 +6,7 @@
 using IdentityServer4.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Vivus.OAuth.IdentityServer
+namespace Multiblog.OAuth.IdentityServer
 {
     public static class IdentityServerBuilderExtensions
     {

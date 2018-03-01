@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vivus.Model
+namespace Multiblog.Model
 {
     public class BlogItem
     {

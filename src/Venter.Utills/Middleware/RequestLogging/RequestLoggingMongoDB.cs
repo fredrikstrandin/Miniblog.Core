@@ -1,4 +1,4 @@
-﻿namespace Venter.Utilities.Middleware.RequestLogging
+﻿namespace Multiblog.Utilities.Middleware.RequestLogging
 {
     public class RequestLoggingMongoDb
     {

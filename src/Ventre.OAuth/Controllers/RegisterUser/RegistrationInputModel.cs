@@ -1,4 +1,4 @@
-﻿namespace Vivus.OAuth.Controllers
+﻿namespace Multiblog.OAuth.Controllers
 {
     public class RegistrationInputModel
     {

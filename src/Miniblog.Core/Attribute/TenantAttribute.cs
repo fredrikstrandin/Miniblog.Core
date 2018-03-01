@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Miniblog.Core.Model.Setting;
-using Miniblog.Core.Repository;
-using Vivus.Model;
+using Multiblog.Core.Model.Setting;
+using Multiblog.Core.Repository;
+using Multiblog.Model;
 
-namespace Miniblog.Core.Attribute
+namespace Multiblog.Core.Attribute
 {
     public class TenantAttribute : ActionFilterAttribute
     {

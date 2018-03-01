@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Miniblog.Core.Repository.Model
+namespace Multiblog.Core.Repository.Model
 {
     [BsonIgnoreExtraElements]
     internal class BaseEntity

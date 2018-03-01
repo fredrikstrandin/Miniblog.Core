@@ -6,14 +6,14 @@ using System.Xml;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Miniblog.Core.Attribute;
-using Miniblog.Core.Models;
-using Miniblog.Core.Services;
-using Venter.Utilities;
-using Vivus.Model;
+using Multiblog.Core.Attribute;
+using Multiblog.Core.Models;
+using Multiblog.Core.Services;
+using Multiblog.Utilities;
+using Multiblog.Model;
 using WebEssentials.AspNetCore.Pwa;
 
-namespace Miniblog.Core.Controllers
+namespace Multiblog.Core.Controllers
 {
     [ServiceFilter(typeof(TenantAttribute))]
     public class BlogController : Controller
@@ -72,7 +72,7 @@ namespace Miniblog.Core.Controllers
             return View("~/Views/Blog/Index.cshtml", posts);
         }
 
-        // This is for redirecting potential existing URLs from the old Miniblog URL format
+        // This is for redirecting potential existing URLs from the old Multiblog URL format
         [Route("/post/{slug}")]
         [HttpGet]
         public IActionResult Redirects(string slug)

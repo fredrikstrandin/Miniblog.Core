@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Miniblog.Core.Repository.VerifyUser
+namespace Multiblog.Core.Repository.VerifyUser
 {
     public interface IVerifyUserRepository
     {

@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Miniblog.Core.Model.Mail;
-using Miniblog.Core.Model.Setting;
+using Multiblog.Core.Model.Mail;
+using Multiblog.Core.Model.Setting;
 
-namespace Miniblog.Core.Repository.Mail
+namespace Multiblog.Core.Repository.Mail
 {
     public class MailRepository : IMailRepository
     {

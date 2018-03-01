@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Miniblog.Core.Models
+namespace Multiblog.Core.Models
 {
     public class Comment
     {

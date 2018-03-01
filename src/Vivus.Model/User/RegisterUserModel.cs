@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 
-namespace Vivus.Model.User
+namespace Multiblog.Model.User
 {
     public class RegisterUserModel
     {

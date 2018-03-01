@@ -19,18 +19,18 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Miniblog.Core.Model.Setting;
+using Multiblog.Core.Model.Setting;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Venter.Utilities.Exception;
-using Vivus.Model.Setting;
-using Vivus.OAuth.IdentityServer;
-using Vivus.Repository.DependencyInjection;
-using Vivus.Services.DependencyInjection;
+using Multiblog.Utilities.Exception;
+using Multiblog.Model.Setting;
+using Multiblog.OAuth.IdentityServer;
+using Multiblog.Repository.DependencyInjection;
+using Multiblog.Services.DependencyInjection;
 
 namespace Host
 {

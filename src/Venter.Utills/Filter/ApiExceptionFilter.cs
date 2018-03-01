@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using Venter.Utilities.Exception;
-using Venter.Utilities.Middleware.RequestLogging;
-using Venter.Utilities.Model;
+using Multiblog.Utilities.Exception;
+using Multiblog.Utilities.Middleware.RequestLogging;
+using Multiblog.Utilities.Model;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using Microsoft.ApplicationInsights;
 
-namespace Venter.Utilities.Filter
+namespace Multiblog.Utilities.Filter
 {
     public class ApiExceptionFilter : IExceptionFilter
     {

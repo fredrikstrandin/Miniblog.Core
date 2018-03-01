@@ -2,10 +2,10 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
-using Venter.Utilities;
-using Vivus.Model;
+using Multiblog.Utilities;
+using Multiblog.Model;
 
-namespace Miniblog.Core.Repository.MongoDB.Model
+namespace Multiblog.Core.Repository.MongoDB.Model
 {
     public class BlogEntity
     {

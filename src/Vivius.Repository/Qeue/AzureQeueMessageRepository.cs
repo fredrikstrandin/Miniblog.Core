@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Vivus.Model.Setting;
-using Vivus.Model.User;
+using Multiblog.Model.Setting;
+using Multiblog.Model.User;
 
-namespace Miniblog.Core.Repository.Qeue
+namespace Multiblog.Core.Repository.Qeue
 {
     public class AzureQeueMessageRepository : IQeueMessageRepository
     {

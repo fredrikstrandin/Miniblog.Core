@@ -9,13 +9,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
-using Miniblog.Core.Repository.Model;
-using Miniblog.Core.Repository;
-using Miniblog.Core.Model.User;
-using Miniblog.Core.Model.Setting;
-using Miniblog.Core.Interface.Repositories;
+using Multiblog.Core.Repository.Model;
+using Multiblog.Core.Repository;
+using Multiblog.Core.Model.User;
+using Multiblog.Core.Model.Setting;
+using Multiblog.Core.Interface.Repositories;
 
-namespace Miniblog.Core.Repositories.User
+namespace Multiblog.Core.Repositories.User
 {
     public class UserRepository : IUserRepository
     {

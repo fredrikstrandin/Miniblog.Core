@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Venter.Utilities
+namespace Multiblog.Utilities
 {
     public static class StringExt
     {

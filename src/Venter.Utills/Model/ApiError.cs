@@ -1,4 +1,4 @@
-﻿namespace Venter.Utilities.Model
+﻿namespace Multiblog.Utilities.Model
 {
 
     public class ApiError

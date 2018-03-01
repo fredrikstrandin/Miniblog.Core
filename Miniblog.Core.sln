@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Miniblog.Core", "src\Miniblog.Core\Miniblog.Core.csproj", "{8CE1A353-8B0D-43F1-B681-6057BAC241BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiblog.Core", "src\Miniblog.Core\Multiblog.Core.csproj", "{8CE1A353-8B0D-43F1-B681-6057BAC241BC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E78285B4-DA3B-430D-8E6E-EA02C0FCB8F9}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,17 +12,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.MongoDB", "src\IdentityServer4.MongoDB\IdentityServer4.MongoDB.csproj", "{2B8B27C9-5BFD-4433-9ABE-74302AFB18BC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Venter.Service", "src\Venter.Service\Venter.Service.csproj", "{5BEABC06-1453-4A9B-91C2-38E36AA80DA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiblog.Service", "src\Venter.Service\Multiblog.Service.csproj", "{5BEABC06-1453-4A9B-91C2-38E36AA80DA1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Venter.Utills", "src\Venter.Utills\Venter.Utills.csproj", "{C0BD5146-DC77-4EDE-9B00-C9375A2A48D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiblog.Utills", "src\Venter.Utills\Multiblog.Utills.csproj", "{C0BD5146-DC77-4EDE-9B00-C9375A2A48D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vivius.MongoDBUtills", "src\Vivius.MongoDBUtills\Vivius.MongoDBUtills.csproj", "{31792957-3E79-46BF-9ED9-21675818AD76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiblog.MongoDBUtills", "src\Vivius.MongoDBUtills\Multiblog.MongoDBUtills.csproj", "{31792957-3E79-46BF-9ED9-21675818AD76}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vivius.Repository", "src\Vivius.Repository\Vivius.Repository.csproj", "{05E70E35-1EE3-4BFB-AE15-108D2206FF6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiblog.Repository", "src\Vivius.Repository\Multiblog.Repository.csproj", "{05E70E35-1EE3-4BFB-AE15-108D2206FF6D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vivus.Model", "src\Vivus.Model\Vivus.Model.csproj", "{EFEB816F-891C-46F4-B488-25757D4E2D22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiblog.Model", "src\Vivus.Model\Multiblog.Model.csproj", "{EFEB816F-891C-46F4-B488-25757D4E2D22}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vivus.OAuth", "src\Ventre.OAuth\Vivus.OAuth.csproj", "{5DC71C9C-D40D-4C58-85E6-9BF057E907CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiblog.OAuth", "src\Ventre.OAuth\Multiblog.OAuth.csproj", "{5DC71C9C-D40D-4C58-85E6-9BF057E907CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{040AE2B6-E5D4-433E-9C37-10D21E4D31FE}"
 EndProject

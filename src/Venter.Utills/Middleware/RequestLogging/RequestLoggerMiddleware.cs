@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace Venter.Utilities.Middleware.RequestLogging
+namespace Multiblog.Utilities.Middleware.RequestLogging
 {
     public class RequestLoggerMiddleware_remove
     {

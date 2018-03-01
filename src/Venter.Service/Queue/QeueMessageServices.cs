@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Miniblog.Core.Repository.Qeue;
-using Vivus.Model.User;
+using Multiblog.Core.Repository.Qeue;
+using Multiblog.Model.User;
 
-namespace Venter.Service.Queue
+namespace Multiblog.Service.Queue
 {
     public class QeueMessageServices : IQeueMessageServices
     {

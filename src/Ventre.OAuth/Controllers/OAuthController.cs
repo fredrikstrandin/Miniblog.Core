@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Vivus.OAuth.Controllers
+namespace Multiblog.OAuth.Controllers
 {
     [Produces("application/json")]
     [Route("api/OAuth")]

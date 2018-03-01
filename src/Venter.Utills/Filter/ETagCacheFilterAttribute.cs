@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Venter.Utilities.Filter
+namespace Multiblog.Utilities.Filter
 {
     public class ETagCheckFilterAttribute : Attribute, IResourceFilter
     {

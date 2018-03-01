@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Miniblog.Core.Model.User;
+using Multiblog.Core.Model.User;
 
-namespace Venter.Service.Interface
+namespace Multiblog.Service.Interface
 {
     public interface ILinkedInServices
     {

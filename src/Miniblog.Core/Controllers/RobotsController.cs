@@ -8,10 +8,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.SyndicationFeed;
 using Microsoft.SyndicationFeed.Atom;
 using Microsoft.SyndicationFeed.Rss;
-using Miniblog.Core.Services;
+using Multiblog.Core.Services;
 using WebEssentials.AspNetCore.Pwa;
 
-namespace Miniblog.Core.Controllers
+namespace Multiblog.Core.Controllers
 {
     public class RobotsController : Controller
     {
@@ -83,8 +83,8 @@ namespace Miniblog.Core.Controllers
 
                 xml.WriteStartElement("service");
 
-                xml.WriteElementString("enginename", "Miniblog.Core");
-                xml.WriteElementString("enginelink", "http://github.com/madskristensen/Miniblog.Core/");
+                xml.WriteElementString("enginename", "Multiblog.Core");
+                xml.WriteElementString("enginelink", "http://github.com/madskristensen/Multiblog.Core/");
                 xml.WriteElementString("homepagelink", host);
 
                 xml.WriteStartElement("apis");
@@ -146,7 +146,7 @@ namespace Miniblog.Core.Controllers
                 var rss = new RssFeedWriter(xmlWriter);
                 await rss.WriteTitle(_manifest.Name);
                 await rss.WriteDescription(_manifest.Description);
-                await rss.WriteGenerator("Miniblog.Core");
+                await rss.WriteGenerator("Multiblog.Core");
                 await rss.WriteValue("link", host);
                 return rss;
             }
@@ -155,7 +155,7 @@ namespace Miniblog.Core.Controllers
             await atom.WriteTitle(_manifest.Name);
             await atom.WriteId(host);
             await atom.WriteSubtitle(_manifest.Description);
-            await atom.WriteGenerator("Miniblog.Core", "https://github.com/madskristensen/Miniblog.Core", "1.0");
+            await atom.WriteGenerator("Multiblog.Core", "https://github.com/madskristensen/Multiblog.Core", "1.0");
             await atom.WriteValue("updated", updated.ToString("yyyy-MM-ddTHH:mm:ssZ"));
             return atom;
         }

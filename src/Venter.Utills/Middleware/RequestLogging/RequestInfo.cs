@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.Net;
 using System;
 
-namespace Venter.Utilities.Middleware.RequestLogging
+namespace Multiblog.Utilities.Middleware.RequestLogging
 {
     public class RequestInfo
     {

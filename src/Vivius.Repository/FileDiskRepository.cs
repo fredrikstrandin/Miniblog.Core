@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Miniblog.Core.Repository
+namespace Multiblog.Core.Repository
 {
     public class FileDiskRepository : IFileRepository
     {

@@ -1,6 +1,6 @@
-﻿using Miniblog.Core.Model.Utils;
+﻿using Multiblog.Core.Model.Utils;
 
-namespace Miniblog.Core.Repository.Model
+namespace Multiblog.Core.Repository.Model
 {
     internal class ProviderSubEntity
     {

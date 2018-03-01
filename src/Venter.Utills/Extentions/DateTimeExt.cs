@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Venter.Utills.Extentions
+namespace Multiblog.Utills.Extentions
 {
     public static class DateTimeExt
     {

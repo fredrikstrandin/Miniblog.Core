@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Miniblog.Core.Models;
+using Multiblog.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace Miniblog.Core.Repository
+namespace Multiblog.Core.Repository
 {
     public class BlogXmlRepository //: IBlogRepository
     {

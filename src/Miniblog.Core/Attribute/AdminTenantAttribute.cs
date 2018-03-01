@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
-using Miniblog.Core.Model.Setting;
+using Multiblog.Core.Model.Setting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Miniblog.Core.Attribute
+namespace Multiblog.Core.Attribute
 {
     public class AdminTenantAttribute : ActionFilterAttribute
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Venter.Service;
+using Multiblog.Service;
 
-namespace Vivus.OAuth.Controllers
+namespace Multiblog.OAuth.Controllers
 {
     [Route("/[controller]")]
     public class TestDataController : Controller

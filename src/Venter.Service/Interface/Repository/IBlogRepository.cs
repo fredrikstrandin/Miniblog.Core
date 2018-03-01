@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Miniblog.Core.Models;
-using Vivus.Model;
+using Multiblog.Core.Models;
+using Multiblog.Model;
 
-namespace Miniblog.Core.Repository
+namespace Multiblog.Core.Repository
 {
     public interface IBlogRepository
     {

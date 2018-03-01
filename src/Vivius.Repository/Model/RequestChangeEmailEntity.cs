@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Miniblog.Core.Repository.Model
+namespace Multiblog.Core.Repository.Model
 {
     internal class RequestChangeEmailEntity
     {

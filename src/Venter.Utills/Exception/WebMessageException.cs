@@ -1,4 +1,4 @@
-﻿namespace Venter.Utilities.Exception
+﻿namespace Multiblog.Utilities.Exception
 {
     public class WebMessageException : System.Exception
     {

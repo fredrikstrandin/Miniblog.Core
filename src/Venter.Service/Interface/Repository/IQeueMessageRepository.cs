@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Vivus.Model.User;
+using Multiblog.Model.User;
 
-namespace Miniblog.Core.Repository.Qeue
+namespace Multiblog.Core.Repository.Qeue
 {
     public interface IQeueMessageRepository
     {

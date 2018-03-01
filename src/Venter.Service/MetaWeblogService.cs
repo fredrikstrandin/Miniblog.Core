@@ -8,12 +8,12 @@ using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Miniblog.Core.Models;
-using Venter.Utilities;
+using Multiblog.Core.Models;
 using WilderMinds.MetaWeblog;
-using Venter.Service.UserService;
+using Multiblog.Service.UserService;
+using Multiblog.Utilities;
 
-namespace Miniblog.Core.Services
+namespace Multiblog.Core.Services
 {
     public class MetaWeblogService : IMetaWeblogProvider
     {

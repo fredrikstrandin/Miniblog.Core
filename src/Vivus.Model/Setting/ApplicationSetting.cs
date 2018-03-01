@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vivus.Model.Setting
+namespace Multiblog.Model.Setting
 {
     public class ApplicationSetting
     {

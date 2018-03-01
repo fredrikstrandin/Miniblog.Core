@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Venter.Utilities.Filter
+namespace Multiblog.Utilities.Filter
 {
     public static class ETagRepository
     {

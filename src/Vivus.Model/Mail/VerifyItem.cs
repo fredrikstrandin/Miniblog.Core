@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vivus.Model.Mail
+namespace Multiblog.Model.Mail
 {
     public class VerifyItem
     {

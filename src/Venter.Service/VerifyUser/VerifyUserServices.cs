@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Venter.Service.Interface;
-using Miniblog.Core.Repository.Mail;
-using Miniblog.Core.Repository.VerifyUser;
+using Multiblog.Service.Interface;
+using Multiblog.Core.Repository.Mail;
+using Multiblog.Core.Repository.VerifyUser;
 
-namespace Miniblog.Core.Services.VerifyUser
+namespace Multiblog.Core.Services.VerifyUser
 {
     public class VerifyUserServices : IVerifyUserServices
     {

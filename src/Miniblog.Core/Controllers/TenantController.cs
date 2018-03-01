@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Miniblog.Core.Attribute;
-using Vivus.Model;
+using Multiblog.Core.Attribute;
+using Multiblog.Model;
 
-namespace Miniblog.Core.Controllers
+namespace Multiblog.Core.Controllers
 {
     [ServiceFilter(typeof(TenantAttribute))]
     public class TenantController : Controller

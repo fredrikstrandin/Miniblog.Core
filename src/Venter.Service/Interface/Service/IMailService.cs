@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Vivus.Model.Mail;
+using Multiblog.Model.Mail;
 
-namespace Miniblog.Core.Services.Mail
+namespace Multiblog.Core.Services.Mail
 {
     public interface IMailService
     {

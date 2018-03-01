@@ -1,18 +1,18 @@
 ﻿using IdentityModel;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Logging;
-using Miniblog.Core.Interface.Repositories;
+using Multiblog.Core.Interface.Repositories;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Miniblog.Core.Model.User;
-using Miniblog.Core.Services.Mail;
-using Vivus.Model.Mail;
+using Multiblog.Core.Model.User;
+using Multiblog.Core.Services.Mail;
+using Multiblog.Model.Mail;
 
-namespace Venter.Service.UserService
+namespace Multiblog.Service.UserService
 {
     public class UserService : IUserService
     {

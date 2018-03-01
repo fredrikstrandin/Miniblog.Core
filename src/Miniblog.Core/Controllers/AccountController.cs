@@ -2,12 +2,12 @@
 //using Microsoft.AspNetCore.Authentication.Cookies;
 //using Microsoft.AspNetCore.Authorization;
 //using Microsoft.AspNetCore.Mvc;
-//using Miniblog.Core.Models;
+//using Multiblog.Core.Models;
 //using System.Security.Claims;
 //using System.Threading.Tasks;
-//using Miniblog.Core.Services;
+//using Multiblog.Core.Services;
 
-//namespace Miniblog.Core.Controllers
+//namespace Multiblog.Core.Controllers
 //{
 //    [Authorize]
 //    public class AccountController : Controller

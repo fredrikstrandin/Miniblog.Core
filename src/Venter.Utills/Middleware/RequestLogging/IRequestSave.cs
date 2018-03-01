@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Venter.Utilities.Middleware.RequestLogging
+namespace Multiblog.Utilities.Middleware.RequestLogging
 {
     public interface IRequestSave
     {

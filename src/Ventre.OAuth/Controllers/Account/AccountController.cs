@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Venter.Service.UserService;
+using Multiblog.Service.UserService;
 
 namespace IdentityServer4.Quickstart.UI
 {

@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Venter.Utilities.Attributes
+namespace Multiblog.Utilities.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class RequestSizeLimitAttribute : Attribute, IAuthorizationFilter, IOrderedFilter

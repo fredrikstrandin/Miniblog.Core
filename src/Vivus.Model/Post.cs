@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Venter.Utilities;
+using Multiblog.Utilities;
 
-namespace Miniblog.Core.Models
+namespace Multiblog.Core.Models
 {
     public class Post
     {

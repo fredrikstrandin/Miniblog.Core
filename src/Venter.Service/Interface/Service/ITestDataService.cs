@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Venter.Service
+namespace Multiblog.Service
 {
     public interface ITestDataService
     {

@@ -1,16 +1,16 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Miniblog.Core.Repository;
-using Miniblog.Core.Repositories.User;
+using Multiblog.Core.Repository;
+using Multiblog.Core.Repositories.User;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Miniblog.Core.Model.Setting;
+using Multiblog.Core.Model.Setting;
 using Microsoft.Extensions.Options;
-using Miniblog.Core.Repository.Model;
+using Multiblog.Core.Repository.Model;
 
-namespace Miniblog.Core.Repository.VerifyUser
+namespace Multiblog.Core.Repository.VerifyUser
 {
     public class VerifyUserRepository : IVerifyUserRepository
     {

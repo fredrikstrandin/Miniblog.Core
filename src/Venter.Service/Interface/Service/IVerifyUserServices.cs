@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Venter.Service.Interface
+namespace Multiblog.Service.Interface
 {
     public interface IVerifyUserServices
     {

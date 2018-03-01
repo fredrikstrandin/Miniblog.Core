@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Venter.Service.Interface;
-using Miniblog.Core.Model.User;
+using Multiblog.Service.Interface;
+using Multiblog.Core.Model.User;
 
-namespace Venter.Service
+namespace Multiblog.Service
 {
     public class LinkedInServices : ILinkedInServices
     {

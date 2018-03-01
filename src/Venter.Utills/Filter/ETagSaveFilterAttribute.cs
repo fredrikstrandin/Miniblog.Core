@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Venter.Utilities.Filter
+namespace Multiblog.Utilities.Filter
 {
     public class ETagSaveFilterAttribute : Attribute, IResourceFilter
     {

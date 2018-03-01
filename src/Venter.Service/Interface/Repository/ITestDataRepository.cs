@@ -1,9 +1,9 @@
-﻿using Miniblog.Core.Models;
+﻿using Multiblog.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Vivus.Model;
+using Multiblog.Model;
 
-namespace Miniblog.Core.Repository
+namespace Multiblog.Core.Repository
 {
     public interface ITestDataRepository
     {

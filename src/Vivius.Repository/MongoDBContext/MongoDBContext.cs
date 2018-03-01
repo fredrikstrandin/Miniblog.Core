@@ -4,12 +4,12 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Miniblog.Core.Repository.Model;
-using Miniblog.Core.Model.Setting;
-using Miniblog.Core.Repository.MongoDB.Models;
-using Miniblog.Core.Repository.MongoDB.Model;
+using Multiblog.Core.Repository.Model;
+using Multiblog.Core.Model.Setting;
+using Multiblog.Core.Repository.MongoDB.Models;
+using Multiblog.Core.Repository.MongoDB.Model;
 
-namespace Miniblog.Core.Repository
+namespace Multiblog.Core.Repository
 {
     internal class MongoDBContext
     {

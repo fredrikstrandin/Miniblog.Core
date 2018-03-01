@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Vivus.OAuth.Controllers
+namespace Multiblog.OAuth.Controllers
 {
     public class RegisterUserViewModel
     {

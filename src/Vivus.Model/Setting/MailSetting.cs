@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Miniblog.Core.Model.Setting
+namespace Multiblog.Core.Model.Setting
 {
     public class MailSetting
     {

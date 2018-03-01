@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Miniblog.Core.Model.User
+namespace Multiblog.Core.Model.User
 {
     public class UserProfileItem
     {

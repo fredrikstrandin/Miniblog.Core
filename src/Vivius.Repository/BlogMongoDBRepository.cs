@@ -1,19 +1,19 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Miniblog.Core.Model.Setting;
-using Miniblog.Core.Models;
-using Miniblog.Core.Repository.MongoDB.Model;
-using Miniblog.Core.Repository.MongoDB.Models;
+using Multiblog.Core.Model.Setting;
+using Multiblog.Core.Models;
+using Multiblog.Core.Repository.MongoDB.Model;
+using Multiblog.Core.Repository.MongoDB.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Miniblog.Core.Repository;
-using Vivus.Model;
+using Multiblog.Core.Repository;
+using Multiblog.Model;
 
-namespace Miniblog.Core.Repository.MongoDB
+namespace Multiblog.Core.Repository.MongoDB
 {
     public class BlogMongoDBRepository : IBlogRepository
     {

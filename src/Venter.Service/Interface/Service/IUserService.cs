@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Miniblog.Core.Model.User;
+using Multiblog.Core.Model.User;
 
-namespace Venter.Service.UserService
+namespace Multiblog.Service.UserService
 {
     public interface IUserService
     {

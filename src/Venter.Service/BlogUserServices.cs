@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Miniblog.Core.Services
+namespace Multiblog.Core.Services
 {
 
     //public class BlogUserServices : IUserServices

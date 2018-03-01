@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Miniblog.Core.Model.Utils
+namespace Multiblog.Core.Model.Utils
 {
     public class GPSPosition
     {

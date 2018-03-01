@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Miniblog.Core.Model.Utils;
+using Multiblog.Core.Model.Utils;
 
-namespace Miniblog.Core.Model.User
+namespace Multiblog.Core.Model.User
 {
     public class UserItem
     {

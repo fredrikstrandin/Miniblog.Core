@@ -2,13 +2,13 @@
 using IdentityServer4.MongoDB.Model;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Options;
-using Miniblog.Core.Model.Setting;
+using Multiblog.Core.Model.Setting;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Vivus.OAuth.IdentityServer
+namespace Multiblog.OAuth.IdentityServer
 {
     public class TenantRedirectUriValidator : IRedirectUriValidator
     {

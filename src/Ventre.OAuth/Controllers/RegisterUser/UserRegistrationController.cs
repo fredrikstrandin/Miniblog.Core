@@ -9,14 +9,14 @@ using System.Security.Claims;
 using IdentityServer4.MongoDB.Model;
 using Microsoft.AspNetCore.Http;
 using IdentityModel;
-using Venter.Service.Queue;
-using Vivus.Model.User;
+using Multiblog.Service.Queue;
+using Multiblog.Model.User;
 using Microsoft.Extensions.Options;
-using Vivus.Model.Setting;
-using Venter.Service.UserService;
-using Miniblog.Core.Model.User;
+using Multiblog.Model.Setting;
+using Multiblog.Service.UserService;
+using Multiblog.Core.Model.User;
 
-namespace Vivus.OAuth.Controllers
+namespace Multiblog.OAuth.Controllers
 {
     [Route("[controller]")]
     public class AccountRegistrationController : Controller
