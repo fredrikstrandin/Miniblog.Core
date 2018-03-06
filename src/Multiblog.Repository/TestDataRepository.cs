@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Multiblog.Model;
 
-namespace Vivius.Repository
+namespace Multiblog.Repository
 {
     public class TestDataRepository : ITestDataRepository
     {

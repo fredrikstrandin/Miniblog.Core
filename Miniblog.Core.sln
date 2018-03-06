@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{3C69D19E-0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitMultiBlog", "test\XUnitMultiBlog\XUnitMultiBlog.csproj", "{529A71CC-B123-449E-83EB-E63777344B77}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnit.Multiblog", "test\XUnit.Servies\XUnit.Multiblog.csproj", "{CFDBBD37-A00D-4646-90F4-EBEC5CA54D54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{529A71CC-B123-449E-83EB-E63777344B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{529A71CC-B123-449E-83EB-E63777344B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{529A71CC-B123-449E-83EB-E63777344B77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFDBBD37-A00D-4646-90F4-EBEC5CA54D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFDBBD37-A00D-4646-90F4-EBEC5CA54D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFDBBD37-A00D-4646-90F4-EBEC5CA54D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFDBBD37-A00D-4646-90F4-EBEC5CA54D54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{EFEB816F-891C-46F4-B488-25757D4E2D22} = {6E8462BC-6083-4E48-8FE5-333F81563F56}
 		{5DC71C9C-D40D-4C58-85E6-9BF057E907CF} = {040AE2B6-E5D4-433E-9C37-10D21E4D31FE}
 		{529A71CC-B123-449E-83EB-E63777344B77} = {3C69D19E-072B-43FF-93DD-65482B8AA5C1}
+		{CFDBBD37-A00D-4646-90F4-EBEC5CA54D54} = {3C69D19E-072B-43FF-93DD-65482B8AA5C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6EFE298-6363-41A3-92FD-78CC98AE3580}

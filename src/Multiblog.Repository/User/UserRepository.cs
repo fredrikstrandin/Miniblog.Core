@@ -35,6 +35,11 @@ namespace Multiblog.Core.Repositories.User
 
         public async Task<string> CreateAsync(UserItem user)
         {
+            if(user == null)
+            {
+                return null;
+            }
+
             UserEntity entity = user;
 
             if (entity != null && (await _context.UserEntityCollection.CountAsync(x => x.Email == entity.Email)) == 0)
@@ -103,7 +108,6 @@ namespace Multiblog.Core.Repositories.User
             }
 
             return ret.ToString();
-
         }
 
         public async Task<bool> SetFavoriteAsync(string userId, string refId)

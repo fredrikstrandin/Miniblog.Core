@@ -23,7 +23,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using Multiblog.Service;
 using Multiblog.Service.UserService;
-using Vivius.Repository;
+using Multiblog.Repository;
 using WebEssentials.AspNetCore.OutputCaching;
 using WebMarkupMin.AspNetCore2;
 using WebMarkupMin.Core;
