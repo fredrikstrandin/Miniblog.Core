@@ -16,7 +16,24 @@ namespace Multiblog.Core.Models
         public string Title { get; set; }
 
         private string _slug { get; set; }
-        public string Slug { get { return _slug; } set { _slug = value.GenerateSlug();  } }
+        public string Slug
+        {
+            get
+            {
+                return _slug;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    _slug = value.GenerateSlug();
+                }
+                else
+                {
+                    _slug = Title.GenerateSlug();
+                }
+            }
+        }
 
         [Required]
         public string Excerpt { get; set; }

@@ -15,6 +15,11 @@ namespace Multiblog.Utilities
         /// <returns>clean slug string (ex. "some-cool-topic")</returns>
         public static string GenerateSlug(this string phrase)
         {
+            if(string.IsNullOrEmpty(phrase))
+            {
+                return string.Empty;
+            }
+
             string s = phrase.Normalize().ToLower();
 
             s = Regex.Replace(s, @"[^a-z0-9\s-]", "");                      // remove invalid characters

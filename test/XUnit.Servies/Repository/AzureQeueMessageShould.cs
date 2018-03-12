@@ -25,13 +25,6 @@ namespace XUnit.Multiblog.Repository
 
             //_sut = new AzureQeueMessageRepository();
         }
-        
-        [Fact]
-        [Trait("Queue", "Send")]
-        public async Task BeSend()
-        {
-            //await _sut.SendCreateUser();            
-        }
 
     }
 }

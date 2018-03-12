@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using Multiblog.Utilities;
 using Multiblog.Model;
+using Multiblog.Model.Blog;
 
 namespace Multiblog.Core.Repository.MongoDB.Model
 {
-    public class BlogEntity
+    internal class BlogEntity
     {
         [BsonId]
         public ObjectId Id { get; set; }
@@ -17,7 +18,11 @@ namespace Multiblog.Core.Repository.MongoDB.Model
         public string SubDomainNormalize { get { return SubDomain.GenerateSlug(); } private set { } }
         public int PostsPerPage { get; set; }
         public int CommentsCloseAfterDays { get; set; }
+        [BsonIgnoreIfNull]
+        public List<BlogPostInfo> BlogPostinfo { get; set; }
+        [BsonIgnoreIfNull]
         public List<CategoryEntity> Categorys { get; set; }
+        public bool AllowSearchEngine { get; set; }
 
         public static implicit operator BlogItem(BlogEntity item)
         {

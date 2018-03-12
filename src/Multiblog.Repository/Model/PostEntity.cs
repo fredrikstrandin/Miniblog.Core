@@ -61,6 +61,7 @@ namespace Multiblog.Core.Repository.MongoDB.Models
             Post post = new Post()
             {
                 Id = item.Id.ToString(),
+                BlogId = item.BlogId.ToString(),
                 Title = item.Title,
                 Categories = item.Categories,
                 Content = item.Content,

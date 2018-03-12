@@ -10,29 +10,32 @@ namespace Multiblog.Core.Repository
 {
     public class FileDiskRepository : IFileRepository
     {
-        private readonly string _folder;
+        private static string _folder = string.Empty;
 
         public FileDiskRepository(IHostingEnvironment env, 
             ILogger<FileDiskRepository> logger)
         {
-            var mountedPath = "/app/data";
-            if (Directory.Exists(mountedPath))
+            if (_folder == string.Empty)
             {
-                logger.LogInformation("Using mounted path '/app/data' for data");
-                _folder = Path.Combine(mountedPath, "Posts");
-            }
-            else
-            {
-                logger.LogInformation("Using 'wwwroot/Posts' for data");
+                var mountedPath = "/app/data";
+                if (Directory.Exists(mountedPath))
+                {
+                    logger.LogInformation("Using mounted path '/app/data' for data");
+                    _folder = Path.Combine(mountedPath, "Posts");
+                }
+                else
+                {
+                    logger.LogInformation("Using 'wwwroot/Posts' for data");
 
-                _folder = Path.Combine(env.WebRootPath, "Posts");
+                    _folder = Path.Combine(env.WebRootPath, "Posts");
+                }
             }
-
         }
         public async Task<string> SaveFileAsync(byte[] bytes, string fileName, string suffix)
         {
+            
             suffix = suffix ?? DateTime.UtcNow.Ticks.ToString();
-
+            
             string ext = Path.GetExtension(fileName);
             string name = Path.GetFileNameWithoutExtension(fileName);
 

@@ -9,97 +9,136 @@ using Microsoft.SyndicationFeed;
 using Microsoft.SyndicationFeed.Atom;
 using Microsoft.SyndicationFeed.Rss;
 using Multiblog.Core.Services;
+using Multiblog.Service.Blog;
+using Multiblog.Service.Interface;
 using WebEssentials.AspNetCore.Pwa;
+using Multiblog.Utilities;
+using Multiblog.Model.Blog;
+using System.IO;
+using Multiblog.Core.Attribute;
 
 namespace Multiblog.Core.Controllers
 {
+    [ServiceFilter(typeof(TenantAttribute))]
     public class RobotsController : Controller
     {
-        private readonly IBlogService _blog;
+        private readonly IBlogPostService _blog;
+        private readonly IBlogService _blogService;
         private readonly IOptionsSnapshot<BlogSettings> _settings;
         private readonly WebManifest _manifest;
 
-        public RobotsController(IBlogService blog, IOptionsSnapshot<BlogSettings> settings, WebManifest manifest)
+        public RobotsController(IBlogPostService blog,
+            IBlogService blogService,
+            IOptionsSnapshot<BlogSettings> settings,
+            WebManifest manifest)
         {
             _blog = blog;
+            _blogService = blogService;
             _settings = settings;
             _manifest = manifest;
         }
 
         [Route("/robots.txt")]
-        [OutputCache(Profile = "default")]
-        public string RobotsTxt()
+        //[OutputCache(Profile = "default")]
+        public async Task<IActionResult> RobotsTxt()
         {
+            string tenant = Request.Tenant();
+            
             string host = Request.Scheme + "://" + Request.Host;
+
             var sb = new StringBuilder();
             sb.AppendLine("User-agent: *");
             sb.AppendLine("Disallow:");
             sb.AppendLine($"sitemap: {host}/sitemap.xml");
 
-            return sb.ToString();
+
+            if (tenant == string.Empty)
+            {
+                foreach (var item in await _blogService.GetSearchableAsync())
+                {
+                    sb.AppendLine($"sitemap: {Request.Scheme}://{item}.{Request.Host}/sitemap.xml");
+                }
+            }
+
+            return Ok(sb.ToString());
         }
 
         [Route("/sitemap.xml")]
-        public async Task SitemapXml()
+        public async Task<IActionResult> SitemapXml()
         {
             string host = Request.Scheme + "://" + Request.Host;
+            string tenant = Request.Tenant();
 
-            Response.ContentType = "application/xml";
-
-            using (var xml = XmlWriter.Create(Response.Body, new XmlWriterSettings { Indent = true }))
+            if (!string.IsNullOrEmpty(tenant) && await _blogService.IsSearchableAsync(tenant))
             {
-                xml.WriteStartDocument();
-                xml.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
+                byte[] byteXml;
 
-                var posts = await _blog.GetPostsAsync(null, int.MaxValue);
-
-                foreach (Models.Post post in posts)
+                using (MemoryStream stream = new MemoryStream())
                 {
-                    var lastMod = new[] { post.PubDate, post.LastModified };
+                    using (var xml = XmlWriter.Create(stream, new XmlWriterSettings { Indent = true }))
+                    {
+                        xml.WriteStartDocument();
+                        xml.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
 
-                    xml.WriteStartElement("url");
-                    xml.WriteElementString("loc", host + post.GetLink());
-                    xml.WriteElementString("lastmod", lastMod.Max().ToString("yyyy-MM-ddThh:mmzzz"));
-                    xml.WriteEndElement();
+                        foreach (BlogPostInfo item in await _blogService.GetBlogPostsAsync(tenant))
+                        {
+                            xml.WriteStartElement("url");
+                            xml.WriteElementString("loc", $"{host}/blog/{item.Slug}");
+                            xml.WriteElementString("lastmod", item.LastModified.ToString("yyyy-MM-ddThh:mmzzz"));
+                            xml.WriteEndElement();
+                        }
+
+                        xml.WriteEndElement();
+                    }
+
+                    stream.Position = 0;
+                    byteXml = new byte[(int)stream.Length];
+                    await stream.ReadAsync(byteXml, 0, (int)stream.Length);
                 }
 
-                xml.WriteEndElement();
+                return File(byteXml, "application/xml");
             }
+
+            return NoContent();
         }
 
-        [Route("/rsd.xml")]
-        public void RsdXml()
-        {
-            string host = Request.Scheme + "://" + Request.Host;
+        // <summary>
+        // Can not be used in multi tenant env.
+        // </summary>
+        //[Route("/rsd.xml")]
+        //public void RsdXml()
+        //{
+        //    string host = Request.Scheme + "://" + Request.Host;
 
-            Response.ContentType = "application/xml";
-            Response.Headers["cache-control"] = "no-cache, no-store, must-revalidate";
+        //    Response.ContentType = "application/xml";
+        //    Response.Headers["cache-control"] = "no-cache, no-store, must-revalidate";
 
-            using (var xml = XmlWriter.Create(Response.Body, new XmlWriterSettings { Indent = true }))
-            {
-                xml.WriteStartDocument();
-                xml.WriteStartElement("rsd");
-                xml.WriteAttributeString("version", "1.0");
+        //    using (var xml = XmlWriter.Create(Response.Body, new XmlWriterSettings { Indent = true }))
+        //    {
+        //        xml.WriteStartDocument();
+        //        xml.WriteStartElement("rsd");
+        //        xml.WriteAttributeString("version", "1.0");
 
-                xml.WriteStartElement("service");
+        //        xml.WriteStartElement("service");
 
-                xml.WriteElementString("enginename", "Multiblog.Core");
-                xml.WriteElementString("enginelink", "http://github.com/madskristensen/Multiblog.Core/");
-                xml.WriteElementString("homepagelink", host);
+        //        xml.WriteElementString("enginename", "Multiblog.Core");
+        //        xml.WriteElementString("enginelink", "https://github.com/fredrikstrandin/Multiblog.Core/");
+        //        xml.WriteElementString("homepagelink", host);
 
-                xml.WriteStartElement("apis");
-                xml.WriteStartElement("api");
-                xml.WriteAttributeString("name", "MetaWeblog");
-                xml.WriteAttributeString("preferred", "true");
-                xml.WriteAttributeString("apilink", host + "/metaweblog");
-                xml.WriteAttributeString("blogid", "1");
+        //        xml.WriteStartElement("apis");
+        //        xml.WriteStartElement("api");
+        //        xml.WriteAttributeString("name", "MetaWeblog");
+        //        xml.WriteAttributeString("preferred", "true");
+        //        xml.WriteAttributeString("apilink", host + "/metaweblog");
+        //        xml.WriteAttributeString("blogid", "5a766911817a741fe8178c8a");
+        //        xml.WriteEndElement(); // api
 
-                xml.WriteEndElement(); // api
-                xml.WriteEndElement(); // apis
-                xml.WriteEndElement(); // service
-                xml.WriteEndElement(); // rsd
-            }
-        }
+        //        xml.WriteEndElement(); // apis
+        //        xml.WriteEndElement(); // service
+
+        //        xml.WriteEndElement(); // rsd
+        //    }
+        //}
 
         [Route("/feed/{type}")]
         public async Task Rss(string type)

@@ -7,9 +7,9 @@ namespace Multiblog.Core.Attribute
 {
     public class TenantAttribute : ActionFilterAttribute
     {
-        private readonly IBlogRepository _blogRepository;
+        private readonly IBlogPostRepository _blogRepository;
 
-        public TenantAttribute(IBlogRepository blogRepository)
+        public TenantAttribute(IBlogPostRepository blogRepository)
         {
             _blogRepository = blogRepository;
         }

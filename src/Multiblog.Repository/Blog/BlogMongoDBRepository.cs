@@ -15,7 +15,7 @@ using Multiblog.Model;
 
 namespace Multiblog.Core.Repository.MongoDB
 {
-    public class BlogMongoDBRepository : IBlogRepository
+    public class BlogMongoDBRepository : IBlogPostRepository
     {
         private readonly MongoDBContext _context;
         private readonly ILogger<BlogMongoDBRepository> _logger;
@@ -44,7 +44,7 @@ namespace Multiblog.Core.Repository.MongoDB
             {
                 if (!ObjectId.TryParse(blogId, out ObjectId id))
                 {
-                    return null;
+                    return new Post[0];
                 }
 
                 posts = await _context.PostEntityCollection
@@ -70,13 +70,18 @@ namespace Multiblog.Core.Repository.MongoDB
             return posts;
         }
 
-        public async Task<Post> GetPostBySlugAsync(string slug, bool isAdmin)
+        public async Task<Post> GetPostBySlugAsync(string blogId, string slug)
         {
-            PostEntity post = await _context.PostEntityCollection
-                .Find(p => p.SlugNormalize == slug && p.PubDate <= DateTime.UtcNow && p.Status == Status.Publish)
-                .FirstOrDefaultAsync();
+            if (ObjectId.TryParse(blogId, out ObjectId id))
+            {
+                PostEntity post = await _context.PostEntityCollection
+                    .Find(p => p.BlogId == id && p.SlugNormalize == slug && p.Status == Status.Publish && p.PubDate <= DateTime.UtcNow)
+                    .FirstOrDefaultAsync();
 
-            return post;
+                return post;
+            }
+
+            return null;
         }
 
         public async Task<Post> GetPostByIdAsync(string id, bool isAdmin)
@@ -201,6 +206,9 @@ namespace Multiblog.Core.Repository.MongoDB
             List<CategoryEntity> ret = await _context.BlogEntityCollection.Find(filter)
                 .Project(x => x.Categorys)
                 .FirstOrDefaultAsync();
+
+            if (ret == null)
+                return new List<string>();
 
             return ret.Select(x => x.Name).ToList();
         }

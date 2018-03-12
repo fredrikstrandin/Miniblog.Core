@@ -32,6 +32,10 @@ using WilderMinds.MetaWeblog;
 using IWmmLogger = WebMarkupMin.Core.Loggers.ILogger;
 using MetaWeblogService = Multiblog.Core.Services.MetaWeblogService;
 using WmmNullLogger = WebMarkupMin.Core.Loggers.NullLogger;
+using Multiblog.Service.Blog;
+using Multiblog.Service.Interface;
+using Multiblog.Service.OAuth;
+using Multiblog.Repository.Blog;
 
 namespace Multiblog.Core
 {
@@ -93,16 +97,17 @@ namespace Multiblog.Core
                 options.Scope.Add("offline_access");
             });
 
-            //services.AddSingleton<IUserServices, BlogUserServices>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMetaWeblog<MetaWeblogService>();
             services.AddScoped(typeof(TenantAttribute));
-            //services.AddSingleton<IBlogService, FileBlogService>();
-            //services.AddSingleton<IBlogRepository, BlogXmlRepository>();
-            //services.AddSingleton<IFileRepository, FileDiskRepository>();
+            services.AddSingleton<IBlogRepository, BlogRepository>();
+            
+            services.AddSingleton<IOAuthServices, OAuthServices>();
 
             services.AddScoped<IBlogService, BlogService>();
-            services.AddScoped<IBlogRepository, BlogMongoDBRepository>();
+
+            services.AddScoped<IBlogPostService, BlogPostService>();
+            services.AddScoped<IBlogPostRepository, BlogMongoDBRepository>();
 
             services.AddScoped<IFileRepository, FileDiskRepository>();
             services.AddScoped<IUserService, UserService>();

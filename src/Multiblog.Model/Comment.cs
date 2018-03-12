@@ -6,7 +6,6 @@ namespace Multiblog.Core.Models
 {
     public class Comment
     {
-        [Required]
         public string Id { get; set; }
 
         [Required]

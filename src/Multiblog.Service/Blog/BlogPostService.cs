@@ -1,38 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using IdentityModel;
+﻿using IdentityModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Multiblog.Core.Models;
 using Multiblog.Core.Repository;
+using Multiblog.Service.Blog;
+using Multiblog.Service.Interface;
 using Multiblog.Service.UserService;
-using Multiblog.Model;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Multiblog.Core.Services
 {
-    public class BlogService : IBlogService
+    public class BlogPostService : IBlogPostService
     {
+
+        private readonly IUserService _userService;
+
+        private readonly IBlogPostRepository _blogPostRepository;
         private readonly IBlogRepository _blogRepository;
         private readonly IFileRepository _file;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly IUserService _userService;
 
-        public BlogService(IHostingEnvironment env,
+        public BlogPostService(IHostingEnvironment env,
             IHttpContextAccessor contextAccessor,
+            IBlogPostRepository blogPostRepository,
             IBlogRepository blogRepository,
-            IFileRepository file,
-            ILogger<BlogService> logger,
+        IFileRepository file,
+            ILogger<BlogPostService> logger,
             IUserService userService)
         {
+            _blogPostRepository = blogPostRepository;
             _blogRepository = blogRepository;
             _file = file;
             _contextAccessor = contextAccessor;
@@ -43,7 +42,7 @@ namespace Multiblog.Core.Services
         {
             bool isAdmin = await IsAdmin(blogId);
 
-            var posts = await _blogRepository.GetPostsAsync(blogId, isAdmin, count, skip);
+            var posts = await _blogPostRepository.GetPostsAsync(blogId, isAdmin, count, skip);
 
             return posts;
         }
@@ -52,38 +51,44 @@ namespace Multiblog.Core.Services
         {
             bool isAdmin = await IsAdmin(blogId);
 
-            return await _blogRepository.GetPostsByCategoryAsync(category, isAdmin, count, skip);
+            return await _blogPostRepository.GetPostsByCategoryAsync(category, isAdmin, count, skip);
         }
 
         public virtual async Task<Post> GetPostBySlug(string blogId, string slug)
         {
-            bool isAdmin = await IsAdmin(blogId);
-
-            return await _blogRepository.GetPostBySlugAsync(slug, isAdmin);            
+            return await _blogPostRepository.GetPostBySlugAsync(blogId, slug);
         }
 
         public async virtual Task<Post> GetPostById(string blogId, string id)
         {
             bool isAdmin = await IsAdmin(blogId);
 
-            return await _blogRepository.GetPostByIdAsync(id, isAdmin);
+            return await _blogPostRepository.GetPostByIdAsync(id, isAdmin);
         }
 
         public async virtual Task<IEnumerable<string>> GetCategoryAsync(string blogId)
         {
-            IEnumerable<string> categories = await _blogRepository.GetCategoryAsync(blogId);
+            IEnumerable<string> categories = await _blogPostRepository.GetCategoryAsync(blogId);
 
             return categories;
         }
 
         public async Task<string> SavePost(Post post)
         {
-            return await _blogRepository.SavePostAsync(post);
+            string id = string.Empty;
+
+            id = await _blogPostRepository.SavePostAsync(post);
+
+            if (!string.IsNullOrEmpty(id) && post.Status == Status.Publish)
+            {
+                await _blogRepository.AddPostUrl(post.BlogId, id, post.Slug);
+            }
+            return id;
         }
 
         public async Task DeletePost(Post post)
         {
-            await _blogRepository.DeletePostAsync(post);
+            await _blogPostRepository.DeletePostAsync(post);
         }
 
         public async Task<string> SaveFile(byte[] bytes, string fileName, string suffix = null)
@@ -105,12 +110,12 @@ namespace Multiblog.Core.Services
 
         public async Task AddCommentAsync(string id, Comment comment)
         {
-            await _blogRepository.AddCommentAsync(id, comment);
+            await _blogPostRepository.AddCommentAsync(id, comment);
         }
 
         public async Task UpdatePostAsync(Post existing)
         {
-            await _blogRepository.UpdatePostAsync(existing);
+            await _blogPostRepository.UpdatePostAsync(existing);
         }
     }
 }

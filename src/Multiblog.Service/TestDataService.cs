@@ -13,38 +13,55 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using Multiblog.Service.UserService;
 using IdentityServer4.MongoDB.Service;
+using Multiblog.Service.Interface;
+using Multiblog.Core.Services;
 
 namespace Multiblog.Service
 {
     public class TestDataService : ITestDataService
     {
-        private readonly ITestDataRepository _testDataRepository;
+        private readonly IBlogService _blogService;
+        private readonly IBlogPostService _blogPostService;
 
-        public TestDataService(ITestDataRepository testDataRepository)
+        public TestDataService(IBlogService blogService,
+            IBlogPostService blogPostService)
         {
-            _testDataRepository = testDataRepository;
+            _blogService = blogService;
+            _blogPostService = blogPostService;
         }
 
         public async Task CreateBlogsAsync()
         {
-            List<BlogItem> list = new List<BlogItem>()
+            List<string> ids = new List<string>();
+            
+            ids.Add(await _blogService.CreateAsync(new BlogItem()
             {
-                new BlogItem()
-                {
-                    Title = "Fredriks blog ",
-                    Description = "Why not.",
-                    SubDomain = "fredrik",
-                    PostsPerPage = 5
-                },
-                new BlogItem()
-                {
-                    Title = "Lena in the garden",
-                    Description = "Flower and stuff.",
-                    SubDomain = "flower",
-                    PostsPerPage = 3
-                }
-            };
+                Id = "5a766911817a741fe8178c8a",
+                Title = "Fredriks blog ",
+                Description = "Why not.",
+                SubDomain = "odesus",
+                PostsPerPage = 5
+            }));
 
+            ids.Add(await _blogService.CreateAsync(new BlogItem()
+            {
+                Id = "5a766911817a741fe8178c8b",
+                Title = "Lena in the garden",
+                Description = "Flower and stuff.",
+                SubDomain = "flower",
+                PostsPerPage = 3
+            }));
+
+            ids.Add(await _blogService.CreateAsync(new BlogItem()
+            {
+                Id = "5a766911817a741fe8178c99",
+                Title = "Pic of the day",
+                Description = "City in pcture.",
+                SubDomain = "pictures",
+                PostsPerPage = 3
+            }));
+
+            
             var generator = new LipsumGenerator(Lipsums.LoremIpsum, false);
             Random ran = new Random((int)DateTime.UtcNow.Ticks);
 
@@ -61,25 +78,23 @@ namespace Multiblog.Service
             };
 
             string description = string.Empty;
-
-            for (int i = 0; i < 5000; i++)
+            
+            for (int i = 0; i < 50; i++)
             {
-                list.Add(new BlogItem()
+                ids.Add(await _blogService.CreateAsync(new BlogItem()
                 {
                     Description = generator.GenerateParagraphs(ran.Next(1, 3), options).ToLine(),
                     Title = generator.GenerateSentences(1).ToLine(false),
                     PostsPerPage = ran.Next(3, 15),
                     SubDomain = i.ToString()
-                });
+                }));
             }
-
-            List<string> ids = await _testDataRepository.CreateBlogsAsync(list);
 
             List<Post> listPosts = new List<Post>();
 
             foreach (var item in ids)
             {
-                int count = ran.Next(1, 70);
+                int count = ran.Next(1, 15);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -103,7 +118,7 @@ namespace Multiblog.Service
 
                     string title = generator.GenerateSentences(1).ToLine(false);
 
-                    listPosts.Add(new Post()
+                    await _blogPostService.SavePost(new Post()
                     {
                         Title = title,
                         BlogId = item,
@@ -116,46 +131,8 @@ namespace Multiblog.Service
                         Status = status
                     });
                 }
-
-                await _testDataRepository.CreateBlogPost(listPosts);
-                listPosts.Clear();
             }
 
-        }
-
-        /// <summary>
-        /// Calculates the lenght in bytes of an object 
-        /// and returns the size 
-        /// </summary>
-        /// <param name="TestObject"></param>
-        /// <returns></returns>
-        private int GetObjectSize(object TestObject)
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            MemoryStream ms = new MemoryStream();
-            byte[] Array;
-            bf.Serialize(ms, TestObject);
-            Array = ms.ToArray();
-            return Array.Length;
-        }
-        private async Task CreateBlogPost()
-        {
-            var generator = new LipsumGenerator(Lipsums.LoremIpsum, false);
-
-            var options = new Paragraph
-            {
-                MinimumSentences = 3,
-                MaximumSentences = 20,
-                SentenceOptions = new Sentence
-                {
-                    MinimumWords = 3,
-                    MaximumWords = 20,
-                    FormatString = "{0}.",
-                }
-            };
-            int paragraphCount = 12;
-
-            var paragraphs = generator.GenerateParagraphs(paragraphCount, options);
         }
     }
 }

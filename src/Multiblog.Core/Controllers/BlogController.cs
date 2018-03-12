@@ -1,16 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Multiblog.Core.Attribute;
 using Multiblog.Core.Models;
-using Multiblog.Core.Services;
-using Multiblog.Utilities;
 using Multiblog.Model;
+using Multiblog.Service.Interface;
+using Multiblog.Utilities;
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Xml;
 using WebEssentials.AspNetCore.Pwa;
 
 namespace Multiblog.Core.Controllers
@@ -18,13 +18,18 @@ namespace Multiblog.Core.Controllers
     [ServiceFilter(typeof(TenantAttribute))]
     public class BlogController : Controller
     {
-        private readonly IBlogService _blog;
+        private readonly IBlogPostService _blogPostService;
+        private readonly IBlogService _blogService;
         private readonly IOptionsSnapshot<BlogSettings> _settings;
         private readonly WebManifest _manifest;
 
-        public BlogController(IBlogService blog, IOptionsSnapshot<BlogSettings> settings, WebManifest manifest)
+        public BlogController(IBlogPostService blogPostService,
+            IBlogService blogService,
+            IOptionsSnapshot<BlogSettings> settings, 
+            WebManifest manifest)
         {
-            _blog = blog;
+            _blogPostService = blogPostService;
+            _blogService = blogService;
             _settings = settings;
             _manifest = manifest;
         }
@@ -55,7 +60,7 @@ namespace Multiblog.Core.Controllers
             ViewData["prev"] = $"/{page + 1}/";
             ViewData["next"] = $"/{(page <= 1 ? null : page - 1 + "/")}";
 
-            var posts = await _blog.GetPostsAsync(blogId, PostsPerPage, PostsPerPage * page);
+            var posts = await _blogPostService.GetPostsAsync(blogId, PostsPerPage, PostsPerPage * page);
 
             return View("~/Views/Blog/Index.cshtml", posts);
         }
@@ -64,7 +69,7 @@ namespace Multiblog.Core.Controllers
         [OutputCache(Profile = "default")]
         public async Task<IActionResult> Category(string category, int page = 0)
         {
-            var posts = (await _blog.GetPostsByCategory(null, category, _settings.Value.PostsPerPage, _settings.Value.PostsPerPage * page));
+            var posts = (await _blogPostService.GetPostsByCategory(null, category, _settings.Value.PostsPerPage, _settings.Value.PostsPerPage * page));
             ViewData["Title"] = _manifest.Name + " " + category;
             ViewData["Description"] = $"Articles posted in the {category} category";
             ViewData["prev"] = $"/blog/category/{category}/{page + 1}/";
@@ -84,13 +89,16 @@ namespace Multiblog.Core.Controllers
         [OutputCache(Profile = "default")]
         public async Task<IActionResult> Post(string slug)
         {
-            var post = await _blog.GetPostBySlug(null, slug);
-
-            if (post != null)
+            if (!string.IsNullOrEmpty(Request.Tenant()))
             {
-                return View(post);
-            }
+                string blogId = await _blogService.GetBlogIdAsync(Request.Tenant());
+                var post = await _blogPostService.GetPostBySlug(blogId, slug);
 
+                if (post != null)
+                {
+                    return View(post);
+                }
+            }
             return NotFound();
         }
 
@@ -103,7 +111,7 @@ namespace Multiblog.Core.Controllers
                 return View(new Post());
             }
 
-            var post = await _blog.GetPostById(null, id);
+            var post = await _blogPostService.GetPostById(null, id);
 
             if (post != null)
             {
@@ -122,7 +130,7 @@ namespace Multiblog.Core.Controllers
                 return View("Edit", post);
             }
 
-            var existing = await _blog.GetPostById(null, post.Id) ?? post;
+            var existing = await _blogPostService.GetPostById(null, post.Id) ?? post;
             string categories = Request.Form["categories"];
 
             existing.Categories = categories.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim().ToLowerInvariant()).ToList();
@@ -134,7 +142,7 @@ namespace Multiblog.Core.Controllers
 
             existing.Content = await SaveFilesToDiskAsync(existing.Content);
 
-            await _blog.SavePost(existing);
+            await _blogPostService.SavePost(existing);
 
             return Redirect(post.GetLink());
         }
@@ -162,7 +170,7 @@ namespace Multiblog.Core.Controllers
                     if (base64Match.Success)
                     {
                         byte[] bytes = Convert.FromBase64String(base64Match.Groups["base64"].Value);
-                        srcNode.Value = await _blog.SaveFile(bytes, fileNameNode.Value).ConfigureAwait(false);
+                        srcNode.Value = await _blogPostService.SaveFile(bytes, fileNameNode.Value).ConfigureAwait(false);
 
                         img.Attributes.Remove(fileNameNode);
                         returnContent = content.Replace(match.Value, img.OuterXml);
@@ -177,11 +185,11 @@ namespace Multiblog.Core.Controllers
         [HttpPost, Authorize, AutoValidateAntiforgeryToken]
         public async Task<IActionResult> DeletePost(string id)
         {
-            var existing = await _blog.GetPostById(null, id);
+            var existing = await _blogPostService.GetPostById(null, id);
 
             if (existing != null)
             {
-                await _blog.DeletePost(existing);
+                await _blogPostService.DeletePost(existing);
                 return Redirect("/");
             }
 
@@ -192,7 +200,7 @@ namespace Multiblog.Core.Controllers
         [HttpPost]
         public async Task<IActionResult> AddComment(string postId, Comment comment)
         {
-            var post = await _blog.GetPostById(null, postId);
+            var post = await _blogPostService.GetPostById(null, postId);
 
             if (!ModelState.IsValid)
             {
@@ -214,7 +222,7 @@ namespace Multiblog.Core.Controllers
             if (!Request.Form.ContainsKey("website"))
             {
                 post.Comments.Add(comment);
-                await _blog.AddCommentAsync(post.Id, comment);
+                await _blogPostService.AddCommentAsync(post.Id, comment);
             }
 
             return Redirect(post.GetLink() + "#" + comment.Id);
@@ -224,7 +232,7 @@ namespace Multiblog.Core.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteComment(string postId, string commentId)
         {
-            var post = await _blog.GetPostById(null, postId);
+            var post = await _blogPostService.GetPostById(null, postId);
 
             if (post == null)
             {
@@ -239,7 +247,7 @@ namespace Multiblog.Core.Controllers
             }
 
             post.Comments.Remove(comment);
-            await _blog.SavePost(post);
+            await _blogPostService.SavePost(post);
 
             return Redirect(post.GetLink() + "#comments");
         }
