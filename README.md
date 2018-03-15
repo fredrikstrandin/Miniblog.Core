@@ -1,11 +1,8 @@
-# Blog engine for ASP.NET Core 2.0
+# Multi tenant blog engine for ASP.NET Core 2.0
 
 A full-featured yet simple blog engine built on ASP.NET Core 2.0.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/lwjrlpvmhg50wwbs?svg=true)](https://ci.appveyor.com/project/madskristensen/Multiblog-core)
-[![NuGet](https://img.shields.io/nuget/v/MadsKristensen.AspNetCore.Multiblog.svg)](https://nuget.org/packages/MadsKristensen.AspNetCore.Multiblog/)
-
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+Its a project starded from Mads Kristensen Miniblog.Core (https://madskristensen/Miniblog.Core)
 
 ![Editor](art/editor.png)
 
@@ -57,25 +54,6 @@ You can embed any youtube video by using the following syntax in the source of a
 ```
 
 *ScXvuavqhzo* is the ID of the YouTube video which can be found in any YouTube link looking this *youtube.com/watch?v=**ScXvuavqhzo***
-
-## How to use
-On the command line, install the template.
-
-```cmd
-dotnet new --install MadsKristensen.AspNetCore.Multiblog
-```
-
-Then create it into any folder.
-
-```cmd
-dotnet new Multiblog
-```
-
-Then run it or open it in Visual Studio or your favorite code editor.
-
-```cmd
-dotnet run
-```
 
 ## Credits
 SVG icons by <https://simpleicons.org/>
