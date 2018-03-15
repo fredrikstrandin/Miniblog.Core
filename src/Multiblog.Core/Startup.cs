@@ -36,14 +36,45 @@ using Multiblog.Service.Blog;
 using Multiblog.Service.Interface;
 using Multiblog.Service.OAuth;
 using Multiblog.Repository.Blog;
+using Multiblog.Model.Setting;
 
 namespace Multiblog.Core
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _environment;
+
+        public Startup(IConfiguration configuration,
+            IHostingEnvironment environment)
         {
             Configuration = configuration;
+            _environment = environment;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(_environment.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{_environment.EnvironmentName}.json", optional: true);
+
+            if (_environment.IsEnvironment("Development"))
+            {
+                builder.AddUserSecrets<Startup>();
+                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
+                builder.AddApplicationInsightsSettings(developerMode: true);
+            }
+
+            builder.AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+
+            if (!(Configuration["AzureKeyVault:Vault"] == null || Configuration["AzureKeyVault:ClientId"] == null || Configuration["AzureKeyVault:ClientSecret"] == null))
+            {
+                builder.AddAzureKeyVault(
+                    $"https://{Configuration["AzureKeyVault:Vault"]}.vault.azure.net/",
+                    Configuration["AzureKeyVault:ClientId"],
+                    Configuration["AzureKeyVault:ClientSecret"]);
+
+                Configuration = builder.Build();
+            }
         }
 
         public static void Main(string[] args)
@@ -67,6 +98,8 @@ namespace Multiblog.Core
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<BlogSettings>(Configuration.GetSection("blog"));
+            services.Configure<UrlSettings>(Configuration.GetSection("UrlSetting"));
+            services.Configure <AzureSettings>(Configuration.GetSection("AzureSetting"));
             services.Configure<MongoDbDatabaseSetting>(Configuration.GetSection("MongoDBDatabaseSetting"));
 
             services.AddMvc();
@@ -83,7 +116,7 @@ namespace Multiblog.Core
             {
                 options.SignInScheme = "Cookies";
 
-                options.Authority = "http://localhost:5000";
+                options.Authority = Configuration["UrlSetting:OAuthServerUrl"]; ;
                 options.RequireHttpsMetadata = false;
 
                 options.ClientId = "MultiBlog";

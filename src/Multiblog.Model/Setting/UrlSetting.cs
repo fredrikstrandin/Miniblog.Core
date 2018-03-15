@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Multiblog.Core.Model.Setting
 {
-    public class UrlSetting
+    public class UrlSettings
     {
         public string OAuthServerUrl { get; set; }
         public string APIServerUrl { get; set; }

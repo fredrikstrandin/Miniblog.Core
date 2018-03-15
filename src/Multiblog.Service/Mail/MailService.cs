@@ -13,13 +13,13 @@ namespace Multiblog.Core.Services.Mail
     {
         private readonly IMailRepository _mailRepository;
         private readonly IVerifyUserRepository _verifyUserRepository;
-        private readonly UrlSetting _urlSetting;
+        private readonly UrlSettings _urlSetting;
         private readonly MailSetting _mailSetting;
 
 
         public MailService(IMailRepository mailRepository,
             IVerifyUserRepository verifyUserRepository,
-            IOptions<UrlSetting> urlSetting,
+            IOptions<UrlSettings> urlSetting,
             IOptions<MailSetting> mailSetting)
         {
             _mailRepository = mailRepository;

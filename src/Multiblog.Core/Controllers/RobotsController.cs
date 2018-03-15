@@ -17,6 +17,7 @@ using Multiblog.Model.Blog;
 using System.IO;
 using Multiblog.Core.Attribute;
 using Multiblog.Model;
+using Multiblog.Core.Models;
 
 namespace Multiblog.Core.Controllers
 {
@@ -175,7 +176,7 @@ namespace Multiblog.Core.Controllers
                         var posts = await _blog.GetPostsAsync(blogItem.Id, 10);
                         var writer = await GetWriter(type, xmlWriter, posts.Max(p => p.PubDate), blogItem);
 
-                        foreach (Models.Post post in posts)
+                        foreach (Post post in posts)
                         {
                             var item = new AtomEntry
                             {
