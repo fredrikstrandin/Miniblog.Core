@@ -266,3 +266,4 @@ __pycache__/
 *.pyc
 /src/Ventre.OAuth/appsettings.AzureDevelopment.json
 /src/Ventre.OAuth/appsettings.Docker.json
+/src/Multiblog.Core/wwwroot/Posts/files

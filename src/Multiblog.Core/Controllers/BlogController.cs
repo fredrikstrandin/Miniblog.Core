@@ -25,7 +25,7 @@ namespace Multiblog.Core.Controllers
 
         public BlogController(IBlogPostService blogPostService,
             IBlogService blogService,
-            IOptionsSnapshot<BlogSettings> settings, 
+            IOptionsSnapshot<BlogSettings> settings,
             WebManifest manifest)
         {
             _blogPostService = blogPostService;
@@ -130,21 +130,35 @@ namespace Multiblog.Core.Controllers
                 return View("Edit", post);
             }
 
-            var existing = await _blogPostService.GetPostById(null, post.Id) ?? post;
-            string categories = Request.Form["categories"];
+            if (RouteData.Values.ContainsKey("tenant") && RouteData.Values["tenant"] is BlogItem)
+            {
+                BlogItem blogItem =  RouteData.Values["tenant"] as BlogItem;
 
-            existing.Categories = categories.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim().ToLowerInvariant()).ToList();
-            existing.Title = post.Title.Trim();
-            existing.Slug = !string.IsNullOrWhiteSpace(post.Slug) ? post.Slug : post.Title.GenerateSlug();
-            existing.Status = post.Status;
-            existing.Content = post.Content.Trim();
-            existing.Excerpt = post.Excerpt.Trim();
+                if (string.IsNullOrEmpty(post.BlogId))
+                {
+                    post.BlogId = blogItem.Id;
+                }
 
-            existing.Content = await SaveFilesToDiskAsync(existing.Content);
+                var existing = await _blogPostService.GetPostById(blogItem.Id, post.Id) ?? post;
+                string categories = Request.Form["categories"];
 
-            await _blogPostService.SavePost(existing);
+                existing.Categories = categories.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim().ToLowerInvariant()).ToList();
+                existing.Title = post.Title.Trim();
+                existing.Slug = !string.IsNullOrWhiteSpace(post.Slug) ? post.Slug : post.Title.GenerateSlug();
+                existing.Status = post.Status;
+                existing.Content = post.Content.Trim();
+                existing.Excerpt = post.Excerpt.Trim();
 
-            return Redirect(post.GetLink());
+                existing.Content = await SaveFilesToDiskAsync(existing.Content);
+
+                await _blogPostService.SavePost(existing);
+
+                return Redirect(post.GetLink());
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         private async Task<string> SaveFilesToDiskAsync(string content)
