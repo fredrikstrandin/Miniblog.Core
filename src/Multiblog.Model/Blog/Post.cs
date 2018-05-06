@@ -30,11 +30,11 @@ namespace Multiblog.Core.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    _slug = value.GenerateSlug();
+                    _slug = Title.GenerateSlug(); 
                 }
                 else
                 {
-                    _slug = Title.GenerateSlug();
+                    _slug = value.GenerateSlug();
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace Multiblog.Core.Models
 
         public IList<string> Categories { get; set; } = new List<string>();
 
-        public IList<Comment> Comments { get; } = new List<Comment>();
+        public IList<Comment> Comments { get; protected set; } = new List<Comment>();
     }
 
     public static class PostExt
@@ -71,6 +71,11 @@ namespace Multiblog.Core.Models
         public static string RenderContent(this Post post)
         {
             var result = post.Content;
+
+            if(string.IsNullOrEmpty(result))
+            {
+                return result;
+            }
 
             // Set up lazy loading of images/iframes
             result = result.Replace(" src=\"", " src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" data-src=\"");

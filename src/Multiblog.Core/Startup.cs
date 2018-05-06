@@ -37,6 +37,8 @@ using Multiblog.Service.Interface;
 using Multiblog.Service.OAuth;
 using Multiblog.Repository.Blog;
 using Multiblog.Model.Setting;
+using Microsoft.EntityFrameworkCore.Storage;
+using Multiblog.Repository.Database;
 
 namespace Multiblog.Core
 {
@@ -97,7 +99,7 @@ namespace Multiblog.Core
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<BlogSettings>(Configuration.GetSection("blog"));
+            services.Configure<BlogSettings>(Configuration.GetSection("BlogSetting"));
             services.Configure<UrlSettings>(Configuration.GetSection("UrlSetting"));
             services.Configure <AzureSettings>(Configuration.GetSection("AzureSetting"));
             services.Configure<MongoDbDatabaseSetting>(Configuration.GetSection("MongoDBDatabaseSetting"));
@@ -131,8 +133,11 @@ namespace Multiblog.Core
             });
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.TryAddSingleton<IDatabaseToolRepository, MongoDatabaseTool>();
+
             services.AddMetaWeblog<MetaWeblogService>();
             services.AddScoped(typeof(TenantAttribute));
+            //services.AddScoped(typeof(BlogPostAttribute));
             services.AddSingleton<IBlogRepository, BlogRepository>();
             
             services.AddSingleton<IOAuthServices, OAuthServices>();
@@ -232,9 +237,11 @@ namespace Multiblog.Core
 
             app.UseMvc(routes =>
             {
+                routes.Routes.Add(new BlogRouter(routes.DefaultHandler));
+
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Blog}/{action=Index}/{id?}");
+                    template: "{controller=profile}/{action=Index}/{id?}");
             });
         }
     }

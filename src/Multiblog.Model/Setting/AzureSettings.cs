@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Multiblog.Model.Setting
+namespace Multiblog.Core.Model.Setting
 {
     public class AzureSettings
     {

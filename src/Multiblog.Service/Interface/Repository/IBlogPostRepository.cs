@@ -16,6 +16,5 @@ namespace Multiblog.Core.Repository
         Task<List<string>> GetCategoryAsync(string id);
         Task AddCommentAsync(string id, Comment comment);
         Task UpdatePostAsync(Post existing);
-        Task<BlogItem> FindBlogAsync(string subdomain);
     }
 }

@@ -20,15 +20,14 @@ namespace Multiblog.Core.Controllers
 {
     [ServiceFilter(typeof(TenantAttribute))]
     [Route("[controller]")]
-    //[ServiceFilter(typeof(BlogPostAttribute))]
-    public class BlogController : Controller
+    public class GalleryController : Controller
     {
         private readonly IBlogPostService _blogPostService;
         private readonly IBlogService _blogService;
         private readonly IOptionsSnapshot<BlogSettings> _settings;
         private readonly WebManifest _manifest;
 
-        public BlogController(IBlogPostService blogPostService,
+        public GalleryController(IBlogPostService blogPostService,
             IBlogService blogService,
             IOptionsSnapshot<BlogSettings> settings,
             WebManifest manifest)
@@ -116,15 +115,7 @@ namespace Multiblog.Core.Controllers
 
             return View("~/Views/Blog/Index.cshtml", posts);
         }
-
-        // This is for redirecting potential existing URLs from the old Miniblog URL format
-        [Route("/post/{slug}")]
-        [HttpGet]
-        public IActionResult Redirects(string slug)
-        {
-            return LocalRedirectPermanent($"/blog/{slug}");
-        }
-
+        
         [Route("{slug?}")]
         //[OutputCache(Profile = "default")]
         public async Task<IActionResult> Post(string slug)
@@ -328,6 +319,12 @@ namespace Multiblog.Core.Controllers
             }
 
             return NotFound();
+        }
+
+        [Route("error")]
+        public IActionResult Error()
+        {
+            return View();
         }
     }
 }

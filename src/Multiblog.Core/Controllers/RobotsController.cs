@@ -18,6 +18,7 @@ using System.IO;
 using Multiblog.Core.Attribute;
 using Multiblog.Model;
 using Multiblog.Core.Models;
+using Multiblog.Core.Model.Setting;
 
 namespace Multiblog.Core.Controllers
 {

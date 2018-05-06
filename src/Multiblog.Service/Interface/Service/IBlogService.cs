@@ -9,10 +9,12 @@ namespace Multiblog.Service.Interface
 {
     public interface IBlogService
     {
-        Task<List<string>> GetSearchableAsync();
+        Task<IEnumerable<string>> GetSearchableAsync();
         Task<bool> IsSearchableAsync(string subDomain);
         Task<string> GetBlogIdAsync(string name);
+        Task<string> GetSubDomainAsync(string blogId);
         Task<string> CreateAsync(BlogItem blogItem);
         Task<IEnumerable<BlogPostInfo>> GetBlogPostsAsync(string tenant);
+        Task<BlogItem> FindBlogAsync(string subdomain);
     }
 }

@@ -56,6 +56,21 @@ namespace Multiblog.Repository.Blog
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<string> GetSubDomainAsync(string blogId)
+        {
+            if (ObjectId.TryParse(blogId, out ObjectId id))
+            {
+                return await _context.BlogEntityCollection
+                    .Find(x => x.Id == id)
+                    .Project(x => x.SubDomainNormalize)
+                    .FirstOrDefaultAsync();
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
         public async Task<IEnumerable<BlogPostInfo>> GetBlogPostsAsync(string tenant)
         {
             var ret = await _context.BlogEntityCollection
@@ -66,18 +81,26 @@ namespace Multiblog.Repository.Blog
             return ret as IEnumerable<BlogPostInfo>;
         }
 
-        public async Task<List<string>> GetSearchableAsync()
+        public async Task<IEnumerable<string>> GetSearchableAsync()
         {
-            return await _context.BlogEntityCollection
+            List<string> ret =  await _context.BlogEntityCollection
                 .Find(x => x.AllowSearchEngine)
                 .Project(x => x.SubDomainNormalize)
                 .ToListAsync();
-        }
 
+            return ret as IEnumerable<string>;
+        }
+        
         public async Task<bool> IsSearchableAsync(string subDomain)
         {
             return await _context.BlogEntityCollection.CountAsync(x => x.SubDomainNormalize == subDomain.Normalize() && x.AllowSearchEngine == true) > 0;
                 
+        }
+
+        public async Task<BlogItem> FindBlogAsync(string subdomain)
+        {
+            return await _context.BlogEntityCollection.Find(x => x.SubDomainNormalize == subdomain)
+                .FirstOrDefaultAsync();
         }
     }
 }

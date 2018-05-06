@@ -40,10 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Tenant\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Multiblog.Model\Multiblog.Model.csproj" />
     <ProjectReference Include="..\Multiblog.Repository\Multiblog.Repository.csproj" />
     <ProjectReference Include="..\Multiblog.Service\Multiblog.Service.csproj" />
