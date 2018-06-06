@@ -103,6 +103,7 @@ namespace Multiblog.Core
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+            //This is not a good solution but at the moment, I have no one else to be able to test.
             if (!_environment.EnvironmentName.StartsWith("Test"))
             {
                 services.AddAuthentication(options =>
