@@ -20,6 +20,7 @@ namespace Multiblog.Core.Controllers
 {
     [ServiceFilter(typeof(TenantAttribute))]
     [Route("[controller]")]
+    [ServiceFilter(typeof(BlogPostAttribute))]
     public class GalleryController : Controller
     {
         private readonly IBlogPostService _blogPostService;

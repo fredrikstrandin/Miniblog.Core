@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using Xunit.Sdk;
 
-namespace XUnit.Multiblog.DataAttributes.Users
+namespace XUnit.Test.DataAttributes.Users
 {
     public class TestUsersEmailDontExist : DataAttribute
     {

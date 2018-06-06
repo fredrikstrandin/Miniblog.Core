@@ -5,7 +5,7 @@ using System.Text;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace XUnit.Multiblog.Utils
+namespace XUnit.Test.Utils
 {
     public class TestCollectionOrderer : ITestCaseOrderer
     {

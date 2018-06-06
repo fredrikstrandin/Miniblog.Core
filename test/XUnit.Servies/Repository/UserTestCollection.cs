@@ -1,13 +1,13 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver.GeoJsonObjectModel;
 using System;
-using XUnit.Multiblog.Constant;
+using XUnit.Test.Constant;
 using Multiblog.Core.Model.User;
 using Multiblog.Core.Repository.Model;
 using Multiblog.Core.Model.Utils;
 using Multiblog.Core.Repository;
 
-namespace XUnit.Multiblog.Repository
+namespace XUnit.Test.Repository
 {
     public class UserTestCollection : IDisposable
     {

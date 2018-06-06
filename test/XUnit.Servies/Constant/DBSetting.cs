@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace XUnit.Multiblog.Constant
+namespace XUnit.Test.Constant
 {
     public static class DBSetting
     {

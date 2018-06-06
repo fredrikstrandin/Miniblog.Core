@@ -1,7 +1,5 @@
 ﻿using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,11 +17,15 @@ using Multiblog.Core.Repository.MongoDB;
 using Multiblog.Core.Repository.VerifyUser;
 using Multiblog.Core.Services;
 using Multiblog.Core.Services.Mail;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using Multiblog.Service;
-using Multiblog.Service.UserService;
 using Multiblog.Repository;
+using Multiblog.Repository.Blog;
+using Multiblog.Repository.Database;
+using Multiblog.Service;
+using Multiblog.Service.Blog;
+using Multiblog.Service.Interface;
+using Multiblog.Service.OAuth;
+using Multiblog.Service.UserService;
+using System.IdentityModel.Tokens.Jwt;
 using WebEssentials.AspNetCore.OutputCaching;
 using WebMarkupMin.AspNetCore2;
 using WebMarkupMin.Core;
@@ -32,13 +34,6 @@ using WilderMinds.MetaWeblog;
 using IWmmLogger = WebMarkupMin.Core.Loggers.ILogger;
 using MetaWeblogService = Multiblog.Core.Services.MetaWeblogService;
 using WmmNullLogger = WebMarkupMin.Core.Loggers.NullLogger;
-using Multiblog.Service.Blog;
-using Multiblog.Service.Interface;
-using Multiblog.Service.OAuth;
-using Multiblog.Repository.Blog;
-using Multiblog.Model.Setting;
-using Microsoft.EntityFrameworkCore.Storage;
-using Multiblog.Repository.Database;
 
 namespace Multiblog.Core
 {
@@ -101,45 +96,48 @@ namespace Multiblog.Core
         {
             services.Configure<BlogSettings>(Configuration.GetSection("BlogSetting"));
             services.Configure<UrlSettings>(Configuration.GetSection("UrlSetting"));
-            services.Configure <AzureSettings>(Configuration.GetSection("AzureSetting"));
+            services.Configure<AzureSettings>(Configuration.GetSection("AzureSetting"));
             services.Configure<MongoDbDatabaseSetting>(Configuration.GetSection("MongoDBDatabaseSetting"));
 
             services.AddMvc();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            services.AddAuthentication(options =>
+            if (!_environment.EnvironmentName.StartsWith("Test"))
             {
-                options.DefaultScheme = "Cookies";
-                options.DefaultChallengeScheme = "oidc";
-            })
-            .AddCookie("Cookies")
-            .AddOpenIdConnect("oidc", options =>
-            {
-                options.SignInScheme = "Cookies";
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "oidc";
+                })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.SignInScheme = "Cookies";
 
-                options.Authority = Configuration["UrlSetting:OAuthServerUrl"]; ;
-                options.RequireHttpsMetadata = false;
+                    options.Authority = Configuration["UrlSetting:OAuthServerUrl"]; ;
+                    options.RequireHttpsMetadata = false;
 
-                options.ClientId = "MultiBlog";
-                options.ClientSecret = "KalleIAmsterdamSniffdeLim";
-                options.ResponseType = "code id_token";
+                    options.ClientId = "MultiBlog";
+                    options.ClientSecret = "KalleIAmsterdamSniffdeLim";
+                    options.ResponseType = "code id_token";
 
-                options.SaveTokens = true;
-                options.GetClaimsFromUserInfoEndpoint = true;
+                    options.SaveTokens = true;
+                    options.GetClaimsFromUserInfoEndpoint = true;
 
-                options.Scope.Add("blog");
-                options.Scope.Add("offline_access");
-            });
+                    options.Scope.Add("blog");
+                    options.Scope.Add("offline_access");
+                });
+            }
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<IDatabaseToolRepository, MongoDatabaseTool>();
 
             services.AddMetaWeblog<MetaWeblogService>();
             services.AddScoped(typeof(TenantAttribute));
-            //services.AddScoped(typeof(BlogPostAttribute));
+            services.AddScoped(typeof(BlogPostAttribute));
             services.AddSingleton<IBlogRepository, BlogRepository>();
-            
+
             services.AddSingleton<IOAuthServices, OAuthServices>();
 
             services.AddScoped<IBlogService, BlogService>();
@@ -154,7 +152,7 @@ namespace Multiblog.Core
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IMailRepository, MailRepository>();
 
-            services.AddScoped<IVerifyUserRepository, VerifyUserRepository > ();
+            services.AddScoped<IVerifyUserRepository, VerifyUserRepository>();
             services.AddScoped<ITestDataService, TestDataService>();
             services.AddScoped<ITestDataRepository, TestDataRepository>();
 
@@ -172,7 +170,7 @@ namespace Multiblog.Core
                     Duration = 3600
                 };
             });
-            
+
             // HTML minification (https://github.com/Taritsyn/WebMarkupMin)
             services
                 .AddWebMarkupMin(options =>

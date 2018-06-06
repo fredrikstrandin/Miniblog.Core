@@ -5,7 +5,7 @@ using System.Text;
 using Multiblog.Model.User;
 using Xunit.Sdk;
 
-namespace XUnit.Multiblog.DataAttributes
+namespace XUnit.Test.DataAttributes
 {
     public class TestUserIdThatDontExistAndFavoriteAttribute : DataAttribute
     {

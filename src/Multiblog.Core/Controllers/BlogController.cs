@@ -20,7 +20,7 @@ namespace Multiblog.Core.Controllers
 {
     [ServiceFilter(typeof(TenantAttribute))]
     [Route("[controller]")]
-    //[ServiceFilter(typeof(BlogPostAttribute))]
+    [ServiceFilter(typeof(BlogPostAttribute))]
     public class BlogController : Controller
     {
         private readonly IBlogPostService _blogPostService;
