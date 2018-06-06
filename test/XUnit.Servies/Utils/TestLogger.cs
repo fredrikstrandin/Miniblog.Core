@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace XUnit.Multiblog.Utils
+namespace XUnit.Test.Utils
 {
     public static class TestLogger
     {

@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Multiblog.Model;
 using Multiblog.Utilities;
 
 namespace Multiblog.Core.Models
@@ -12,6 +15,7 @@ namespace Multiblog.Core.Models
     {
         public string Id { get; set; }
         public string BlogId { get; set; }
+        public Author Author { get; set; }
         [Required]
         public string Title { get; set; }
 
@@ -26,11 +30,11 @@ namespace Multiblog.Core.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    _slug = value.GenerateSlug();
+                    _slug = Title.GenerateSlug(); 
                 }
                 else
                 {
-                    _slug = Title.GenerateSlug();
+                    _slug = value.GenerateSlug();
                 }
             }
         }
@@ -49,49 +53,29 @@ namespace Multiblog.Core.Models
 
         public IList<string> Categories { get; set; } = new List<string>();
 
-        public IList<Comment> Comments { get; } = new List<Comment>();
+        public IList<Comment> Comments { get; protected set; } = new List<Comment>();
+    }
 
-        public string GetLink()
+    public static class PostExt
+    {        
+        public static string GetLink(this Post post)
         {
-            return $"/blog/{Slug}/";
+            return $"/blog/{post.Slug}/";
         }
 
-        public bool AreCommentsOpen(int commentsCloseAfterDays)
+        public static bool AreCommentsOpen(this Post post, int commentsCloseAfterDays)
         {
-            return PubDate.AddDays(commentsCloseAfterDays) >= DateTime.UtcNow;
+            return post.PubDate.AddDays(commentsCloseAfterDays) >= DateTime.UtcNow;
         }
-        static string RemoveReservedUrlCharacters(string text)
-        {
-            var reservedCharacters = new List<string> { "!", "#", "$", "&", "'", "(", ")", "*", ",", "/", ":", ";", "=", "?", "@", "[", "]", "\"", "%", ".", "<", ">", "\\", "^", "_", "'", "{", "}", "|", "~", "`", "+" };
 
-            foreach (var chr in reservedCharacters)
+        public static string RenderContent(this Post post)
+        {
+            var result = post.Content;
+
+            if(string.IsNullOrEmpty(result))
             {
-                text = text.Replace(chr, "");
+                return result;
             }
-
-            return text;
-        }
-
-        static string RemoveDiacritics(string text)
-        {
-            var normalizedString = text.Normalize(NormalizationForm.FormD);
-            var stringBuilder = new StringBuilder();
-
-            foreach (var c in normalizedString)
-            {
-                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
-                {
-                    stringBuilder.Append(c);
-                }
-            }
-
-            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-        }
-
-        public string RenderContent()
-        {
-            var result = Content;
 
             // Set up lazy loading of images/iframes
             result = result.Replace(" src=\"", " src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" data-src=\"");

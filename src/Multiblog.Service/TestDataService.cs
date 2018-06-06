@@ -1,20 +1,15 @@
-﻿using Multiblog.Core.Repository;
+﻿using Microsoft.Extensions.Options;
+using Multiblog.Core.Model.Setting;
+using Multiblog.Core.Models;
+using Multiblog.Model;
+using Multiblog.Service.Interface;
+using Multiblog.Utilities;
+using Multiblog.Utills.Extentions;
+using NLipsum.Core;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Multiblog.Model;
-using NLipsum.Core;
-using Multiblog.Utilities;
-using Multiblog.Core.Models;
 using System.Linq;
-using Multiblog.Utills.Extentions;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using Multiblog.Service.UserService;
-using IdentityServer4.MongoDB.Service;
-using Multiblog.Service.Interface;
-using Multiblog.Core.Services;
+using System.Threading.Tasks;
 
 namespace Multiblog.Service
 {
@@ -22,45 +17,61 @@ namespace Multiblog.Service
     {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
+        private readonly BlogSettings _blogSettings;
 
         public TestDataService(IBlogService blogService,
-            IBlogPostService blogPostService)
+            IBlogPostService blogPostService,
+            IOptions<BlogSettings> blogSettings)
         {
             _blogService = blogService;
             _blogPostService = blogPostService;
+            _blogSettings = blogSettings.Value;
         }
 
         public async Task CreateBlogsAsync()
         {
             List<string> ids = new List<string>();
-            
-            ids.Add(await _blogService.CreateAsync(new BlogItem()
-            {
-                Id = "5a766911817a741fe8178c8a",
-                Title = "Fredriks blog ",
-                Description = "Why not.",
-                SubDomain = "odesus",
-                PostsPerPage = 5
-            }));
 
-            ids.Add(await _blogService.CreateAsync(new BlogItem()
+            if (_blogSettings.Multitenant)
             {
-                Id = "5a766911817a741fe8178c8b",
-                Title = "Lena in the garden",
-                Description = "Flower and stuff.",
-                SubDomain = "flower",
-                PostsPerPage = 3
-            }));
+                ids.Add(await _blogService.CreateAsync(new BlogItem()
+                {
+                    Id = "5a766911817a741fe8178c8a",
+                    Title = "Fredriks blog ",
+                    Description = "This blog is for test.",
+                    SubDomain = "odesus",
+                    PostsPerPage = 5
+                }));
 
-            ids.Add(await _blogService.CreateAsync(new BlogItem()
+                ids.Add(await _blogService.CreateAsync(new BlogItem()
+                {
+                    Id = "5a766911817a741fe8178c8b",
+                    Title = "Lena in the garden",
+                    Description = "Flower and stuff.",
+                    SubDomain = "flower",
+                    PostsPerPage = 3
+                }));
+
+                ids.Add(await _blogService.CreateAsync(new BlogItem()
+                {
+                    Id = "5a766911817a741fe8178c99",
+                    Title = "Pic of the day",
+                    Description = "City in pcture.",
+                    SubDomain = "pictures",
+                    PostsPerPage = 3
+                }));
+            }
+            else
             {
-                Id = "5a766911817a741fe8178c99",
-                Title = "Pic of the day",
-                Description = "City in pcture.",
-                SubDomain = "pictures",
-                PostsPerPage = 3
-            }));
-
+                ids.Add(await _blogService.CreateAsync(new BlogItem()
+                {
+                    Id = "5a766911817a741fe8178c99",
+                    Title = "Singel blog",
+                    Description = "Its a sampel of a simple blog.",
+                    SubDomain = "www",
+                    PostsPerPage = 3
+                }));
+            }
             
             var generator = new LipsumGenerator(Lipsums.LoremIpsum, false);
             Random ran = new Random((int)DateTime.UtcNow.Ticks);
@@ -79,16 +90,16 @@ namespace Multiblog.Service
 
             string description = string.Empty;
             
-            for (int i = 0; i < 50; i++)
-            {
-                ids.Add(await _blogService.CreateAsync(new BlogItem()
-                {
-                    Description = generator.GenerateParagraphs(ran.Next(1, 3), options).ToLine(),
-                    Title = generator.GenerateSentences(1).ToLine(false),
-                    PostsPerPage = ran.Next(3, 15),
-                    SubDomain = i.ToString()
-                }));
-            }
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    ids.Add(await _blogService.CreateAsync(new BlogItem()
+            //    {
+            //        Description = generator.GenerateParagraphs(ran.Next(1, 3), options).ToLine(),
+            //        Title = generator.GenerateSentences(1).ToLine(false),
+            //        PostsPerPage = ran.Next(3, 15),
+            //        SubDomain = i.ToString()
+            //    }));
+            //}
 
             List<Post> listPosts = new List<Post>();
 
@@ -133,6 +144,6 @@ namespace Multiblog.Service
                 }
             }
 
-        }
+        }        
     }
 }

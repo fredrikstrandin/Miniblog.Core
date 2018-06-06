@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using Xunit.Sdk;
 
-namespace XUnit.Multiblog.DataAttributes
+namespace XUnit.Test.DataAttributes
 {
     public class TestUserDoubletAttribute : DataAttribute
     {

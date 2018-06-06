@@ -72,10 +72,10 @@ namespace Multiblog.Core.Repository.MongoDB
 
         public async Task<Post> GetPostBySlugAsync(string blogId, string slug)
         {
-            if (ObjectId.TryParse(blogId, out ObjectId id))
+            if (ObjectId.TryParse(blogId, out ObjectId id) && !string.IsNullOrEmpty(slug))
             {
                 PostEntity post = await _context.PostEntityCollection
-                    .Find(p => p.BlogId == id && p.SlugNormalize == slug && p.Status == Status.Publish && p.PubDate <= DateTime.UtcNow)
+                    .Find(p => p.BlogId == id && p.SlugNormalize == slug.Normalize() && p.Status == Status.Publish && p.PubDate <= DateTime.UtcNow)
                     .FirstOrDefaultAsync();
 
                 return post;
@@ -226,11 +226,6 @@ namespace Multiblog.Core.Repository.MongoDB
             var update = Builders<PostEntity>.Update.AddToSet(x => x.Comments, com);
 
             var post = await _context.PostEntityCollection.FindOneAndUpdateAsync(filter, update);
-        }
-
-        public async Task<BlogItem> FindBlogAsync(string subdomain)
-        {
-            return await _context.BlogEntityCollection.Find(x => x.SubDomainNormalize == subdomain).FirstOrDefaultAsync();
         }
     }
 }

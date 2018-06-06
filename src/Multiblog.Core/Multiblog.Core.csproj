@@ -2,7 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>6f510c96-a60d-494c-b1bd-a8f78242d173</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Services\**" />
+    <Content Remove="Services\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Attribute\AdminTenantAttribute.cs" />
@@ -32,14 +40,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="Views\Tenant\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Multiblog.Model\Multiblog.Model.csproj" />
     <ProjectReference Include="..\Multiblog.Repository\Multiblog.Repository.csproj" />
     <ProjectReference Include="..\Multiblog.Service\Multiblog.Service.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1Development_1json__JSONSchema="http://json.schemastore.org/commands" /></VisualStudio></ProjectExtensions>
 
 </Project>

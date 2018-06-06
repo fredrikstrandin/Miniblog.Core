@@ -11,9 +11,9 @@ namespace Multiblog.Core.Attribute
 {
     public class AdminTenantAttribute : ActionFilterAttribute
     {
-        private readonly UrlSetting _urlSetting;
+        private readonly UrlSettings _urlSetting;
 
-        public AdminTenantAttribute(IOptions<UrlSetting> urlSetting)
+        public AdminTenantAttribute(IOptions<UrlSettings> urlSetting)
         {
             _urlSetting = urlSetting.Value;
         }

@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using XUnit.Multiblog.Utils;
+using XUnit.Test.Utils;
 
-namespace XUnit.Multiblog.Repository
+namespace XUnit.Test.Repository
 {
     public class AzureQeueMessageShould
     {

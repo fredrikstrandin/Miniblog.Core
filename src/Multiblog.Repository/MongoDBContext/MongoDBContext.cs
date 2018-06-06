@@ -8,6 +8,7 @@ using Multiblog.Core.Repository.Model;
 using Multiblog.Core.Model.Setting;
 using Multiblog.Core.Repository.MongoDB.Models;
 using Multiblog.Core.Repository.MongoDB.Model;
+using Multiblog.Repository;
 
 namespace Multiblog.Core.Repository
 {
@@ -27,12 +28,11 @@ namespace Multiblog.Core.Repository
             Database = Client.GetDatabase(_dbStetting.Database);
         }
         
-        internal IMongoCollection<UserEntity> UserEntityCollection => Database.GetCollection<UserEntity>("UserEntity");
-        internal IMongoCollection<RequestChangeEmailEntity> RequestChangeEmailEntityCollection => Database.GetCollection<RequestChangeEmailEntity>("RequestChangeEmailEntity");
-        internal IMongoCollection<VerifyEntity> VerifyEntityCollection => Database.GetCollection<VerifyEntity>("VerifyEntity");
-
-        internal IMongoCollection<PostEntity> PostEntityCollection => Database.GetCollection<PostEntity>("PostEntity");
-        internal IMongoCollection<CategoryEntity> CategorieEntityCollection => Database.GetCollection<CategoryEntity>("CategoryEntity");
-        internal IMongoCollection<BlogEntity> BlogEntityCollection => Database.GetCollection<BlogEntity>("BlogEntity");
+        internal IMongoCollection<UserEntity> UserEntityCollection => Database.GetCollection<UserEntity>(DatabaseName.UserEntity);
+        internal IMongoCollection<RequestChangeEmailEntity> RequestChangeEmailEntityCollection => Database.GetCollection<RequestChangeEmailEntity>(DatabaseName.RequestChangeEmailEntity);
+        internal IMongoCollection<VerifyEntity> VerifyEntityCollection => Database.GetCollection<VerifyEntity>(DatabaseName.VerifyEntity);
+        internal IMongoCollection<PostEntity> PostEntityCollection => Database.GetCollection<PostEntity>(DatabaseName.PostEntity);
+        internal IMongoCollection<CategoryEntity> CategorieEntityCollection => Database.GetCollection<CategoryEntity>(DatabaseName.CategoryEntity);
+        internal IMongoCollection<BlogEntity> BlogEntityCollection => Database.GetCollection<BlogEntity>(DatabaseName.BlogEntity);
     }
 }

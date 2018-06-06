@@ -11,10 +11,10 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using XUnit.Multiblog.DataAttributes;
-using XUnit.Multiblog.Utils;
+using XUnit.Test.DataAttributes;
+using XUnit.Test.Utils;
 
-namespace XUnit.Multiblog.Servies
+namespace XUnit.Test.Servies
 {
     public class UserShould : IClassFixture<MongoDbDatabaseSetting>
     {

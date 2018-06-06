@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Multiblog.Core.Model.Setting;
 using Multiblog.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -15,12 +17,15 @@ namespace Multiblog.Service.OAuth
     public class OAuthServices : IOAuthServices
     {
         private readonly IHttpContextAccessor _context;
+        private readonly UrlSettings _urlSetting;
         private DiscoveryResponse _disco = null;
         private TokenClient _tokenClient = null;
 
-        public OAuthServices(IHttpContextAccessor context)
+        public OAuthServices(IHttpContextAccessor context,
+            IOptions<UrlSettings> urlSetting)
         {
             _context = context;
+            _urlSetting = urlSetting.Value;
         }
 
         public async Task ValidateUserAsync(string username, string password)
@@ -28,11 +33,11 @@ namespace Multiblog.Service.OAuth
             // discover endpoints from metadata
             if (_disco == null)
             {
-                _disco = await DiscoveryClient.GetAsync("http://localhost:5000");
+                _disco = await DiscoveryClient.GetAsync(_urlSetting.OAuthServerUrl);
                 if (_disco.IsError)
                 {
                     Console.WriteLine(_disco.Error);
-
+                        
                     _disco = null;
                     return;
                 }

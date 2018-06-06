@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace XUnit.Multiblog
+namespace XUnit.Test
 {
     public static class UserData
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Xunit.Sdk;
 
-namespace XUnit.Multiblog.DataAttributes
+namespace XUnit.Test.DataAttributes
 {
     public class TestUsersAttribute : DataAttribute
     {

@@ -6,12 +6,12 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using XUnit.Multiblog.Constant;
-using XUnit.Multiblog.DataAttributes;
-using XUnit.Multiblog.DataAttributes.Users;
-using XUnit.Multiblog.Utils;
+using XUnit.Test.Constant;
+using XUnit.Test.DataAttributes;
+using XUnit.Test.DataAttributes.Users;
+using XUnit.Test.Utils;
 
-namespace XUnit.Multiblog.Repository
+namespace XUnit.Test.Repository
 {
     public class UserShould : IClassFixture<UserTestCollection>
     {

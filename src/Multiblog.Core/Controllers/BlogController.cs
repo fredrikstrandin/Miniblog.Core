@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Multiblog.Core.Attribute;
+using Multiblog.Core.Model;
+using Multiblog.Core.Model.Setting;
 using Multiblog.Core.Models;
 using Multiblog.Model;
 using Multiblog.Service.Interface;
 using Multiblog.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -16,6 +19,8 @@ using WebEssentials.AspNetCore.Pwa;
 namespace Multiblog.Core.Controllers
 {
     [ServiceFilter(typeof(TenantAttribute))]
+    [Route("[controller]")]
+    [ServiceFilter(typeof(BlogPostAttribute))]
     public class BlogController : Controller
     {
         private readonly IBlogPostService _blogPostService;
@@ -34,8 +39,8 @@ namespace Multiblog.Core.Controllers
             _manifest = manifest;
         }
 
-        [Route("/{page:int?}")]
-        [OutputCache(Profile = "default")]
+        [Route("{page:int?}")]
+        //[OutputCache(Profile = "default")]
         public async Task<IActionResult> Index([FromRoute]int page = 0)
         {
             int PostsPerPage = 2;
@@ -43,12 +48,12 @@ namespace Multiblog.Core.Controllers
 
             if (RouteData.Values.ContainsKey("tenant") && RouteData.Values["tenant"] is BlogItem)
             {
-                BlogItem item = RouteData.Values["tenant"] as BlogItem;
+                BlogItem tenant = RouteData.Values["tenant"] as BlogItem;
 
-                blogId = item.Id;
-                ViewData["Title"] = item.Title;
-                ViewData["Description"] = item.Description;
-                PostsPerPage = item.PostsPerPage;
+                blogId = tenant.Id;
+                ViewData["Title"] = tenant.Title;
+                ViewData["Description"] = tenant.Description;
+                PostsPerPage = tenant.PostsPerPage;
             }
             else
             {
@@ -60,24 +65,59 @@ namespace Multiblog.Core.Controllers
             ViewData["prev"] = $"/{page + 1}/";
             ViewData["next"] = $"/{(page <= 1 ? null : page - 1 + "/")}";
 
-            var posts = await _blogPostService.GetPostsAsync(blogId, PostsPerPage, PostsPerPage * page);
+            IEnumerable<Post> posts = await _blogPostService.GetPostsAsync(blogId, PostsPerPage, PostsPerPage * page);
 
-            return View("~/Views/Blog/Index.cshtml", posts);
+            string host = Request.Scheme + "://" + Request.Host;
+
+            List<PostView> postview = new List<PostView>();
+
+            foreach (var item in posts)
+            {
+                PostView post = new PostView(item);
+
+                if (RouteData.Values["tenant"] is BlogItem)
+                {
+                    post.Url = $"{Request.Scheme}://{Request.Host}/blog/{item.Slug}";
+                }
+                else
+                {
+                    string SubDomain = await _blogService.GetSubDomainAsync(item.BlogId);
+                    post.Url = $"{Request.Scheme}://{SubDomain}.{Request.Host}/blog/{item.Slug}";
+                }
+
+                postview.Add(post);
+            }
+
+            return View("~/Views/Blog/Index.cshtml", postview);
         }
 
-        [Route("/blog/category/{category}/{page:int?}")]
-        [OutputCache(Profile = "default")]
+        [Route("category/{category}/{page:int?}")]
+        //[OutputCache(Profile = "default")]
         public async Task<IActionResult> Category(string category, int page = 0)
         {
-            var posts = (await _blogPostService.GetPostsByCategory(null, category, _settings.Value.PostsPerPage, _settings.Value.PostsPerPage * page));
-            ViewData["Title"] = _manifest.Name + " " + category;
+            string blogId = null;
+
+            if (RouteData.Values.ContainsKey("tenant") && RouteData.Values["tenant"] is BlogItem)
+            {
+                BlogItem blog = RouteData.Values["tenant"] as BlogItem;
+                blogId = blog.Id;
+                ViewData["Title"] = $"{blog.Title} {category}";
+            }
+            else
+            {
+                ViewData["Title"] = $"{_manifest.Name} {category}";
+            }
+
+            var posts = (await _blogPostService.GetPostsByCategory(blogId, category, _settings.Value.PostsPerPage, _settings.Value.PostsPerPage * page));
+
             ViewData["Description"] = $"Articles posted in the {category} category";
             ViewData["prev"] = $"/blog/category/{category}/{page + 1}/";
             ViewData["next"] = $"/blog/category/{category}/{(page <= 1 ? null : page - 1 + "/")}";
+
             return View("~/Views/Blog/Index.cshtml", posts);
         }
 
-        // This is for redirecting potential existing URLs from the old Multiblog URL format
+        // This is for redirecting potential existing URLs from the old Miniblog URL format
         [Route("/post/{slug}")]
         [HttpGet]
         public IActionResult Redirects(string slug)
@@ -85,46 +125,56 @@ namespace Multiblog.Core.Controllers
             return LocalRedirectPermanent($"/blog/{slug}");
         }
 
-        [Route("/blog/{slug?}")]
-        [OutputCache(Profile = "default")]
+        [Route("{slug?}")]
+        //[OutputCache(Profile = "default")]
         public async Task<IActionResult> Post(string slug)
         {
-            if (!string.IsNullOrEmpty(Request.Tenant()))
+            if (RouteData.Values.ContainsKey("tenant") && RouteData.Values["tenant"] is BlogItem)
             {
-                string blogId = await _blogService.GetBlogIdAsync(Request.Tenant());
-                var post = await _blogPostService.GetPostBySlug(blogId, slug);
+                BlogItem blog = RouteData.Values["tenant"] as BlogItem;
+
+                Post temp = await _blogPostService.GetPostBySlug(blog.Id, slug);
+                if (temp != null)
+                {
+                    var post = new PostView(temp);
+
+                    post.Url = $"{Request.Scheme}://{Request.Host}/blog/{post.Slug}";
+                    return View(post);
+                }
+            }
+
+            return NotFound();
+        }
+
+        [Route("edit/{id?}")]
+        [HttpGet, Authorize]
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (RouteData.Values.ContainsKey("tenant") && RouteData.Values["tenant"] is BlogItem)
+            {
+                BlogItem blog = RouteData.Values["tenant"] as BlogItem;
+                
+                if (string.IsNullOrEmpty(id))
+                {
+                    return View(new Post());
+                }
+
+                var post = await _blogPostService.GetPostById(blog.Id, id);
 
                 if (post != null)
                 {
                     return View(post);
                 }
             }
-            return NotFound();
-        }
-
-        [Route("/blog/edit/{id?}")]
-        [HttpGet, Authorize]
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                return View(new Post());
-            }
-
-            var post = await _blogPostService.GetPostById(null, id);
-
-            if (post != null)
-            {
-                return View(post);
-            }
 
             return NotFound();
         }
 
-        [Route("/blog/{slug?}")]
+        [Route("{slug?}")]
         [HttpPost, Authorize, AutoValidateAntiforgeryToken]
         public async Task<IActionResult> UpdatePost(Post post)
         {
+
             if (!ModelState.IsValid)
             {
                 return View("Edit", post);
@@ -195,75 +245,96 @@ namespace Multiblog.Core.Controllers
             return content;
         }
 
-        [Route("/blog/deletepost/{id}")]
+        [Route("deletepost/{id}")]
         [HttpPost, Authorize, AutoValidateAntiforgeryToken]
         public async Task<IActionResult> DeletePost(string id)
         {
-            var existing = await _blogPostService.GetPostById(null, id);
-
-            if (existing != null)
+            if (RouteData.Values.ContainsKey("tenant") && RouteData.Values["tenant"] is BlogItem)
             {
-                await _blogPostService.DeletePost(existing);
-                return Redirect("/");
+                BlogItem blog = RouteData.Values["tenant"] as BlogItem;
+
+                var existing = await _blogPostService.GetPostById(blog.Id, id);
+
+                if (existing != null)
+                {
+                    await _blogPostService.DeletePost(existing);
+                    return Redirect("/");
+                }
             }
 
             return NotFound();
         }
 
-        [Route("/blog/comment/{postId}")]
+        [Route("comment/{postId}")]
         [HttpPost]
         public async Task<IActionResult> AddComment(string postId, Comment comment)
         {
-            var post = await _blogPostService.GetPostById(null, postId);
-
-            if (!ModelState.IsValid)
+            if (RouteData.Values.ContainsKey("tenant") && RouteData.Values["tenant"] is BlogItem)
             {
-                return View("Post", post);
+                BlogItem blog = RouteData.Values["tenant"] as BlogItem;
+
+                var post = await _blogPostService.GetPostById(blog.Id, postId);
+
+                if (!ModelState.IsValid)
+                {
+                    return View("Post", post);
+                }
+
+                if (post == null || !post.AreCommentsOpen(_settings.Value.CommentsCloseAfterDays))
+                {
+                    return NotFound();
+                }
+
+                comment.IsAdmin = User.Identity.IsAuthenticated;
+                comment.Content = comment.Content.Trim();
+                comment.Author = comment.Author.Trim();
+                comment.Email = comment.Email.Trim();
+
+                // the website form key should have been removed by javascript
+                // unless the comment was posted by a spam robot
+                if (!Request.Form.ContainsKey("website"))
+                {
+                    post.Comments.Add(comment);
+                    await _blogPostService.AddCommentAsync(post.Id, comment);
+                }
+
+                return Redirect(post.GetLink() + "#" + comment.Id);
             }
 
-            if (post == null || !post.AreCommentsOpen(_settings.Value.CommentsCloseAfterDays))
-            {
-                return NotFound();
-            }
-
-            comment.IsAdmin = User.Identity.IsAuthenticated;
-            comment.Content = comment.Content.Trim();
-            comment.Author = comment.Author.Trim();
-            comment.Email = comment.Email.Trim();
-
-            // the website form key should have been removed by javascript
-            // unless the comment was posted by a spam robot
-            if (!Request.Form.ContainsKey("website"))
-            {
-                post.Comments.Add(comment);
-                await _blogPostService.AddCommentAsync(post.Id, comment);
-            }
-
-            return Redirect(post.GetLink() + "#" + comment.Id);
+            return NotFound();
         }
 
-        [Route("/blog/comment/{postId}/{commentId}")]
+        [Route("comment/{postId}/{commentId}")]
         [Authorize]
         public async Task<IActionResult> DeleteComment(string postId, string commentId)
         {
-            var post = await _blogPostService.GetPostById(null, postId);
-
-            if (post == null)
+            if (RouteData.Values.ContainsKey("tenant") && RouteData.Values["tenant"] is BlogItem)
             {
-                return NotFound();
+                BlogItem blog = RouteData.Values["tenant"] as BlogItem;
+
+                var post = await _blogPostService.GetPostById(blog.Id, postId);
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                var comment = post.Comments.FirstOrDefault(c => c.Id.Equals(commentId, StringComparison.OrdinalIgnoreCase));
+
+                if (comment == null)
+                {
+                    return NotFound();
+                }
+
+                post.Comments.Remove(comment);
+
+                //Todo: Change to delete comment
+                await _blogPostService.SavePost(post);
+
+                return Redirect(post.GetLink() + "#comments");
             }
 
-            var comment = post.Comments.FirstOrDefault(c => c.Id.Equals(commentId, StringComparison.OrdinalIgnoreCase));
-
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            post.Comments.Remove(comment);
-            await _blogPostService.SavePost(post);
-
-            return Redirect(post.GetLink() + "#comments");
+            return NotFound();
         }
     }
 }

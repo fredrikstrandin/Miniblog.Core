@@ -21,10 +21,7 @@ namespace Multiblog.Core.Repositories.User
     {
         private readonly MongoDBContext _context;
         private readonly ILogger<UserRepository> _logger;
-
-
-        private readonly TelemetryClient _telemetry = new TelemetryClient();
-
+        
         public UserRepository(ILogger<UserRepository> logger,
             IOptions<MongoDbDatabaseSetting> _dbStetting)
         {

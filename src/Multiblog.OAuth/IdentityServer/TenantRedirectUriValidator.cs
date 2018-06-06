@@ -12,9 +12,9 @@ namespace Multiblog.OAuth.IdentityServer
 {
     public class TenantRedirectUriValidator : IRedirectUriValidator
     {
-        private readonly UrlSetting _urlSetting;
+        private readonly UrlSettings _urlSetting;
 
-        public TenantRedirectUriValidator(IOptions<UrlSetting> urlSetting)
+        public TenantRedirectUriValidator(IOptions<UrlSettings> urlSetting)
         {
             _urlSetting = urlSetting.Value;
         }
